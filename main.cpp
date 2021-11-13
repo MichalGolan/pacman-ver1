@@ -1,22 +1,17 @@
-#include "Board.h"
+#include "Map.h"
 #include "Game.h"
 
 void main()
 {
-	Game game;
+	
 	int play = 1;
-
-	while (play)
+	do
 	{
-		game.set(&play);
-		if (play)
-		{
-			//game
-			// !game
-		}
+		Game game;
+		game.set(play);
+		//destroy curent game
 
-
-	}
+	} while (play);
 
 
 }

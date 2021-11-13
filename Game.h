@@ -2,7 +2,7 @@
 	#define _GAME_H
 
 #include <iostream>
-#include "Board.h"
+#include "Map.h"
 #include "Pacman.h"
 #include "Ghost.h"
 
@@ -11,20 +11,27 @@ using namespace std;
 class Game {
 
 private:
-	Board _board;
+	Map _map;
 	Pacman _pacman;
 	Ghost _ghosts[2];
-	int breadcrumbs;
-	int lives;
+	int _breadcrumbs;
+	int _lives;
+	int _colourfulGame;
 
 	void printInfo();
 
 public:
 	Game();
-	Game(int& play); //constructor- initializing akk datamembers
 	~Game();
-	void set();
+	void initGhosts();
+	void set(int& play);
 	void run();
+	int validMove(char key);
+	void handleNextMove();
+	Position getNextPos();
+	Position getNextNextPos();
+	int pacmanGhostMeet();
+
 	void printMenu() const;
 	void pause();
 };

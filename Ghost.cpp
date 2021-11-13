@@ -1,17 +1,8 @@
 #include "Ghost.h"
 
-Ghost::Ghost()
+Position  Ghost::getLocation()
 {
-	_direction = 1;
-	_figure = '$';
-}
-
-Ghost::Ghost(Position pos, int dir, Colour c = WHITE, const char figure = '$')
-{
-	_direction = dir;
-	_colour = c;
-	_figure = figure;
-	_location = pos;
+	return _location;
 }
 
 void Ghost::setColour(Colour c) {
@@ -24,6 +15,11 @@ void Ghost::setFigure(const char c) {
 
 void Ghost::setDirection(int dir) {
 	_direction = dir;
+}
+
+void Ghost::setLocation(Position loc)
+{
+	_location = loc;
 }
 
 void Ghost::move()

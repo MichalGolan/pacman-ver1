@@ -1,5 +1,14 @@
 #include "Pacman.h"
 
+Pacman::Pacman(Position pos = {1,2}, int dir = 4, char figure = '@', Colour colour = WHITE)
+{
+	_location = pos;
+	_direction = dir;
+	_figure = figure;
+	_colour = colour; 
+	setArrowKeys("wxads");
+}
+
 
 void Pacman::setArrowKeys(const char* keys) { // "waxd s"
 	_arrowKeys[0] = keys[0];
@@ -20,6 +29,22 @@ void Pacman::setFigure(const char c) {
 void Pacman::setDirection(int dir) {
 	_direction = dir;
 }
+
+void Pacman::setLocation(Position newLocation)
+{
+	_location = newLocation;
+}
+
+Position Pacman::getLocation()
+{
+	return _location;
+}
+
+int Pacman::getDirection()
+{
+	return _direction;
+}
+
 
 void Pacman::move()
 {

@@ -12,13 +12,11 @@ class Ghost {
 	Colour _colour;
 
 public:
-	Ghost(); // default constractor
-	Ghost(Position pos, int dir, Colour c = WHITE, const char figure = '$');
-	~Ghost();
+	Position getLocation();
 	void setColour(Colour c);
 	void setFigure(const char c);
 	void setDirection(int dir);
-
+	void setLocation(Position loc);
 	void move();
 	
 };

@@ -1,5 +1,12 @@
 #include "Position.h"
 
+void Position::setXY(int _x, int _y)
+{
+	x = _x;
+	y = _y;
+}
+
+
 void Position::draw(char ch) const
 {
 	gotoxy(x, y);
@@ -27,5 +34,12 @@ void Position::move(int direction)
 	case 3: // RIGHT
 		++x;
 		break;
+	case 4: // STAY
+		break;
 	}
+}
+
+int Position::compare(Position a)
+{
+	return (a.x == x && a.y == y);
 }
