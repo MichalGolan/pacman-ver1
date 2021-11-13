@@ -1,4 +1,6 @@
-#pragma once
+#ifndef _BOARD_H
+	#define _BOARD_H
+
 #include <iostream>
 using namespace std;
 
@@ -31,6 +33,9 @@ private:
 "#    ###########    #    ############    ############    #    ############    #",
 "#                   #                                                         #",
 "###############################################################################"
+
+
+
 	};
 	int _currBCNum;
 	int _maxBCnum;
@@ -45,4 +50,4 @@ public:
 
 };
 
-
+#endif

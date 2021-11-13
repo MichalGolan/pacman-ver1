@@ -1,4 +1,6 @@
-#pragma once
+#ifndef _GAME_H
+	#define _GAME_H
+
 #include <iostream>
 #include "Board.h"
 using namespace std;
@@ -15,3 +17,5 @@ public:
 	void printMenu();
 	void pause();
 };
+
+#endif
