@@ -1,5 +1,26 @@
 #include "Pacman.h"
 
+
+void Pacman::setArrowKeys(const char* keys) { // "waxd s"
+	_arrowKeys[0] = keys[0];
+	_arrowKeys[1] = keys[1];
+	_arrowKeys[2] = keys[2];
+	_arrowKeys[3] = keys[3];
+	_arrowKeys[4] = keys[4];
+}
+
+void Pacman::setColour(Colour c) {
+	_colour = c;
+}
+
+void Pacman::setFigure(const char c) {
+	_figure = c;
+}
+
+void Pacman::setDirection(int dir) {
+	_direction = dir;
+}
+
 void Pacman::move()
 {
 	//assuming the next move is valid --> this will be checked before the call for move
@@ -13,7 +34,7 @@ void Pacman::move()
 	_location.draw(_figure);
 }
 
-int Pacman::getDirectionKey(char key)
+int Pacman::getDirectionKey(char key) const
 {
 	for (int i = 0; i < 5; i++)
 	{
@@ -22,3 +43,4 @@ int Pacman::getDirectionKey(char key)
 	}
 	return -1;
 }
+

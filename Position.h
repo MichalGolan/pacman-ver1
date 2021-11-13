@@ -4,10 +4,13 @@
 #include "General.h"
 
 class Position {
-	int x = 1, y = 1;
+	int x;
+	int y;
+
 public:
-	void draw(char ch);
-	void move();
+	Position(int _x = 1, int _y = 1) : x(_x), y(_y) {}; 
+	void draw(char ch) const;
+	void move() ;
 	void move(int direction);
 };
 

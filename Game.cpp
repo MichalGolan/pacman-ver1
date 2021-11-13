@@ -1,6 +1,6 @@
 #include"Game.h"
 
-void Game::setGame()
+void Game::set(int &play)
 {
 	int choice;
 	printMenu();
@@ -10,6 +10,7 @@ void Game::setGame()
 	{
 	case 1:
 	{
+		run(); 
 		break;
 	}
 	case 8:
@@ -20,18 +21,27 @@ void Game::setGame()
 	case 9:
 	{
 		cout << "Bye" << endl;
-		exit(0);
+		play = 0;
 		break;
 	}
 	default:
 		break;
 	}
 }
-void Game::printMenu()
+
+void Game::run()
+{
+	//print board
+	//get input for moves for pacman
+	//initialize movments both pacman and ghost
+
+}
+void Game::printMenu() const
 {
 	cout << "Welcome to the pacman!" << endl << "please press your choice:" << endl << "1 - start a new game" << endl <<
 		"8 - Present instructionsand keys" << endl << "9 - EXIT" << endl;
 }
+
 
 void Game::pause()
 {

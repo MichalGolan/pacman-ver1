@@ -1,12 +1,13 @@
 #include "Position.h"
 
-void Position::draw(char ch)
+void Position::draw(char ch) const
 {
 	gotoxy(x, y);
 	cout << ch << endl;
 }
 
-void Position::move() {
+void Position::move()  
+{
 	int dir = rand() % 4;
 	move(dir);
 }
