@@ -1,7 +1,7 @@
 #include "Map.h"
 #include "Game.h"
 
-void main()
+int main()
 {
 	
 	int play = 1;
@@ -9,6 +9,7 @@ void main()
 	{
 		Game game;
 		game.set(play);
+
 		//destroy curent game
 
 	} while (play);

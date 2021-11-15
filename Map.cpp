@@ -1,9 +1,26 @@
 #include "Map.h"
 
-Map::Map(const char** newMap) : _width(80), _height(25) //this function construts a new map. given a char array, 
-                                                        //it 'translates' it to a tileType array
+Map::Map() : _width(defWidth), _height(defHeight), _totalBC(0) //empty constructor
+                                                    //this function construts a new map. given a char array, 
+                                                    //it 'translates' it to a tileType array
 {
-	_totalBC = 0;
+    char staticMap[19][76] = { {"###########################################################################"},
+    {"#                     #                             #                     #"},{"#   ###############   #   #######################   #   ###############   #"},
+    {"#   #                                           #   #                     #"},{"#   #   ###########   #####   ###############   #   #   #####   #######   #"},
+    {"#   #                 #                                         #         #"},{"#       ###########   #   #########   #######   #############   #   ###   #"},
+    {"#   #             #   #   #                 #   #               #         #"},{"#   #   #######   #   #   ###################   #   #############   ###   #"},
+    {"#   #   #             #                         #                     #   #"},{"#   #   ###########       ###############   #   #   ###############       #"},
+    {"#                     #                     #                         #   #"},{"#   #   ###########   #########   ###########   #############   #######   #"},
+    {"#   #                                                       #             #"},{"#   ###   #   ###############################   #   #####   ###########   #"},
+    {"#         #   #                                 #                         #"},{"#   ###   #   #   ###########################   #   ###################   #"},
+    {"#                                                                         #"},{"###########################################################################"} };
+
+    char** myMap = new char* [19];
+    for (int i = 0; i < 19; i++)
+    {
+        myMap[i] = new char[76];
+        strcpy(myMap[i], staticMap[i]);
+    }
 
     _map = new tileType * [_height];
     for (int i = 0; i < _height; i++)
@@ -11,15 +28,15 @@ Map::Map(const char** newMap) : _width(80), _height(25) //this function construt
         _map[i] = new tileType[_width];
         for (int j = 0; j < _width; j++)
         {
-            if (newMap[i][j] == typeKey[WALL]) // if it's a '#' meaning wall
+            if (myMap[i][j] == typeKey[WALL]) // if it's a '#' meaning wall
                 _map[i][j] = WALL;
             else
             {
-				if (_width % 2 == 0) //breadcrumbs appear in the even coloumns, for aesthetic purposes :)
-				{
-					_map[i][j] = BREADCRUMB;
-					_totalBC++;
-				}
+                if (j % 2 == 0) //breadcrumbs appear in the even coloumns, for aesthetic purposes :)
+                {
+                    _map[i][j] = BREADCRUMB;
+                    _totalBC++;
+                }
 
                 else
                     _map[i][j] = EMPTY;
@@ -27,23 +44,39 @@ Map::Map(const char** newMap) : _width(80), _height(25) //this function construt
             }
         }
     }
+   
 }
 
-void Map::setTile(Position pos, int newtype)
+Map::~Map()
 {
-    _map[pos.x][pos.y] = (tileType)newtype;
+    if (_width != -1) //otherwise this would mean the program did not make a dynaic array for map.
+    {
+        for (int i = 0; i < _height; i++)
+        {
+            delete[] _map[i];
+        }
+        delete[] _map;
+    }
 }
 
-int Map::getTileType(Position pos)
+void Map::setTile(Position pos, tileType newtype)
 {
-    return (int)_map[pos.x][pos.y];
+    _map[pos.x][pos.y] = newtype;
+}
+
+Map::tileType Map::getTileType(Position pos) const
+{
+    return _map[pos.x][pos.y];
 }
 
 void Map::print()
 {
-	int i;
-	for (i = 0; i < ROW; i++)
-	{
-		cout << _map[i] << endl;
-	}
+    for (int i = 0; i < _height; i++)
+    {
+        for (int j = 0; j < _width; j++)
+        {
+            cout << typeKey[_map[i][j]];
+        }
+        cout << endl;
+    }
 }

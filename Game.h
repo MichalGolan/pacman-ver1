@@ -10,20 +10,14 @@ using namespace std;
 
 class Game {
 
-private:
-	Map _map;
-	Pacman _pacman;
-	Ghost _ghosts[2];
-	int _breadcrumbs;
-	int _lives;
-	int _colourfulGame;
-
-	void printInfo();
-
 public:
+	//c'tors
 	Game();
-	~Game();
+
+	//setters
 	void initGhosts();
+
+	//gameplay methods
 	void set(int& play);
 	void run();
 	int validMove(char key);
@@ -31,9 +25,21 @@ public:
 	Position getNextPos();
 	Position getNextNextPos();
 	int pacmanGhostMeet();
+	char pause();
+	void printPause();
 
+	//printing methods
+	void printInfo();
 	void printMenu() const;
-	void pause();
+	
+
+private: //data members
+	Map    _map;
+	Pacman _pacman;
+	Ghost  _ghosts[2];
+	int    _breadcrumbs;
+	int    _lives;
+	int    _colourfulGame;
 };
 
 #endif

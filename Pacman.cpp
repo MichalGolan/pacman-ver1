@@ -1,14 +1,13 @@
 #include "Pacman.h"
 
-Pacman::Pacman(Position pos = {1,2}, int dir = 4, char figure = '@', Colour colour = WHITE)
+Pacman::Pacman(Position pos, Position::compass dir, char figure, Colour colour)
 {
-	_location = pos;
-	_direction = dir;
-	_figure = figure;
-	_colour = colour; 
+	setLocation(pos);
+	setDirection(dir);
+	setFigure(figure);
+	setColour(colour);
 	setArrowKeys("wxads");
 }
-
 
 void Pacman::setArrowKeys(const char* keys) { // "waxd s"
 	_arrowKeys[0] = keys[0];
@@ -27,6 +26,10 @@ void Pacman::setFigure(const char c) {
 }
 
 void Pacman::setDirection(int dir) {
+	_direction = (Position::compass)dir;
+}
+
+void Pacman::setDirection(Position::compass dir) {
 	_direction = dir;
 }
 
@@ -35,28 +38,19 @@ void Pacman::setLocation(Position newLocation)
 	_location = newLocation;
 }
 
-Position Pacman::getLocation()
+Position Pacman::getLocation() const
 {
 	return _location;
 }
 
-int Pacman::getDirection()
+Position::compass Pacman::getDirection() const
 {
 	return _direction;
 }
 
-
 void Pacman::move()
 {
-	//assuming the next move is valid --> this will be checked before the call for move
-	// print ' '
-	//update x y locatoin
-	//colour
-	//draw
-	_location.draw(' ');
-	_location.move(_direction);
-	setTextColour(_colour);
-	_location.draw(_figure);
+	_location.move(_colour, _figure, _direction);
 }
 
 int Pacman::getDirectionKey(char key) const

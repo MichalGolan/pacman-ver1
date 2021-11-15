@@ -1,6 +1,8 @@
 #ifndef _GENERAL_H
 	#define _GENERAL_H
 
+#pragma warning(disable: 4996)
+
 #include <iostream>
 #include <stdlib.h>
 #include <conio.h>
