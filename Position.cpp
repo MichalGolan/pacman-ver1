@@ -6,7 +6,6 @@ void Position::setXY(int _x, int _y)
 	y = _y;
 }
 
-
 void Position::draw(char ch) const
 {
 	gotoxy(x, y);
