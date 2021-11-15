@@ -294,7 +294,11 @@ void Game::printInfo()
 {
 	cout << "Pacman game instructions:" << endl
 		<< "Keys:" << endl
-		<< "LEFT a or A" << endl		<< "RIGHT d or D" << endl		<< "UP w or W" << endl		<< "Down x or X" << endl		<< "STAY s or S" << endl << endl
+		<< "LEFT a or A" << endl
+		<< "RIGHT d or D" << endl
+		<< "UP w or W" << endl
+		<< "Down x or X" << endl
+		<< "STAY s or S" << endl << endl
 		<< "To Pause, press ESC at any time" << endl << endl
 		<< "Your Goal: eat all the breadcrumbs, avoid all the ghosts!" << endl
 		<< "Once a ghost hits you, you lose a life. Once you lose all your lives it is GAME OVER!" << endl
