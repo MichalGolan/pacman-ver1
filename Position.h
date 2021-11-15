@@ -14,7 +14,7 @@ public:
 
 	void draw(char ch) const;
 
-	void update();
+	void randUpdate();
 	void update(compass direction);
 	void move(Colour colour, char c, compass direction);
 	void moveRand(Colour colour, char c);

@@ -61,12 +61,12 @@ Map::~Map()
 
 void Map::setTile(Position pos, tileType newtype)
 {
-    _map[pos.x][pos.y] = newtype;
+    _map[pos.y][pos.x] = newtype;
 }
 
 Map::tileType Map::getTileType(Position pos) const
 {
-    return _map[pos.x][pos.y];
+    return _map[pos.y][pos.x];
 }
 
 void Map::print()
@@ -79,4 +79,12 @@ void Map::print()
         }
         cout << endl;
     }
+}
+
+void Map::printTile(Position pos)
+{
+    int x = pos.x;
+    int y = pos.y;
+    cout << typeKey[_map[y][x]];
+
 }

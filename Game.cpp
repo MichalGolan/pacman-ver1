@@ -2,17 +2,6 @@
 
 const int ESC = 27;
 const int ENTER = 13;
-//Map _map;
-//Pacman _pacman;
-//Ghost _ghosts[2];
-//int breadcrumbs;
-//int lives;
-/*
-Position _location;
-int _direction;
-char _figure;
-Colour _colour;
-*/
 
 Game::Game() : _breadcrumbs(0), _lives(3), _colourfulGame(0)
 {
@@ -32,8 +21,8 @@ void Game::initGhosts()
 		wantedColour = WHITE; // choose colour later *******************
 	}
 	
-	Ghost ghost1({ 1,78 }, Position::DOWN, '$', wantedColour);
-	Ghost ghost2({ 18,2 }, Position::RIGHT, '$', wantedColour);
+	Ghost ghost1({ 72,1 }, Position::DOWN, '1', wantedColour);
+	Ghost ghost2({ 2,17 }, Position::RIGHT, '2', wantedColour);
 
 	_ghosts[0] = ghost1; //will use ghost's copy constructor
 	_ghosts[1] = ghost2; 
@@ -85,12 +74,12 @@ void Game::run()
 
 	//get input for moves for pacman
 	//initialize movments both pacman and ghost
-	int timer = 1;
+	int timer = 0;
 	char key = 0;
 	do {
 		//print pacman and ghosts - always or only if location changed?
 		//if  printing always might create a sort of "blinking" of the figure, if the location is the same
-
+		_pacman.move();
 		if (_kbhit() ) //only if new input in buffer
 		{
 			key = _getch(); // add lowercase func *************
@@ -105,11 +94,11 @@ void Game::run()
 		}
 		if (timer % 2 == 0) //to make the ghost move 1/2 speed of pacman
 		{
-			//move+print ghost ************************
-			timer = 1;
+			handleGhostMove();
+			timer = 0;
 		}
 		timer++;
-		handleNextMove();
+		handlePacmanMove();
 		Sleep(1000);
 	} while (key != ENTER); //this needs to change! exiting this loop is for QUITTING THE GAME! 
 	                      //NOT FOR PAUSE!
@@ -139,31 +128,36 @@ int Game::validMove(char key) // is input ok?
 	return 0;
 }
 
+int Game::isNextLocationWall(Position::compass dir, Position location)
+{
+	if ((dir == Position::UP || dir == Position::DOWN) && _map.getTileType(location) == Map::WALL) // direction is up or down && a wall
+	{
+		return 1;
+	}
+	location.update(dir);// getting 2 steps from original location, usefull for left/right movement
+	if ((dir == Position::LEFT || dir == Position::RIGHT) && _map.getTileType(location) == Map::WALL) // direction is left or right && a wall
+	{
+		return 1;
+	}
+	return 0;
+}
+
+
 // this function check what to on the next move according to: if a wall, a breadcrumb or a ghost. it considers up down or left right
 // it takes into consideration the case #_@_# where it not allowed to move left or right
-	
-void Game::handleNextMove()
+void Game::handlePacmanMove()
 {
-	Position nextpos = getNextPos();
-	Position nextnextpos = getNextNextPos();
+	Position nextpos = _pacman.getLocation();
+	nextpos.update(_pacman.getDirection());
 
-	if ((_pacman.getDirection() == Position::UP || _pacman.getDirection() == Position::DOWN) && _map.getTileType(nextpos) == Map::WALL) // direction is up or down && a wall
-	{
-		_pacman.setDirection(Position::STAY);
-	}
-	else if ((_pacman.getDirection() == Position::LEFT || _pacman.getDirection() == Position::RIGHT) && _map.getTileType(nextnextpos) == Map::WALL) // direction is left or right && a wall
+	if (isNextLocationWall(_pacman.getDirection(), nextpos))
 	{
 		_pacman.setDirection(Position::STAY);
 	}
 	else if (_map.getTileType(nextpos) == Map::BREADCRUMB) // not a wall --> check if BC
 	{
-			_map.setTile(nextpos, Map::EMPTY);
-			_breadcrumbs++;
-			_pacman.setLocation(nextpos);
-	}
-	else if (_map.getTileType(nextpos) == Map::EMPTY) // if empty
-	{
-		_pacman.setLocation(nextpos);
+		_map.setTile(nextpos, Map::EMPTY);
+		_breadcrumbs++;
 	}
 	if (pacmanGhostMeet())// check if pacman and ghost collide 
 	{
@@ -171,83 +165,30 @@ void Game::handleNextMove()
 	}
 
 }
-
-/*
-* if up or down
-*		check wall or BC for nextposition
-*		if wall 
-*		update dir to stay
-*		else 
-*		check BC
-* 
-* else if left or right 
-*		handle:
-*		check double move for wall
-*		update direction to stay
-*		else
-*		check for BC
-* 
-* anyway check ghost on pacman
+//if ghost --> restart board(include restart location of pacman (1 1) and init for ghost), live--
 
 
-
-
-*/
-
-
-
-
-
-	//if wall -- > change to stay direction
-	//if bc --> update score, update map from BREADCRUMB to EMPTY
-	//if ghost --> restart board(include restart location of pacman (1 1) and init for ghost), live--
-
-
-Position Game::getNextPos() //why is this function in game and not in pacman?
+void Game::handleGhostMove()
 {
-	Position curPos = _pacman.getLocation();
-	int x = curPos.x;
-	int y = curPos.y;
-	
-	switch (_pacman.getDirection())
+	for (Ghost& g : _ghosts)
 	{
-	case Position::UP:
-		--y;
-		break;
-	case Position::DOWN:
-		++y;
-		break;
-	case Position::LEFT:
-		--x;
-		break;
-	case Position::RIGHT:
-		++x;
-		break;
-	case Position::STAY:
-		break;
+		Position Ghostloc = g.getLocation();
+		Position NextGhostloc = g.getLocation(); ///// -------------- find another solution
+
+		NextGhostloc.update(g.getDirection());
+
+		if (isNextLocationWall(g.getDirection(), NextGhostloc))
+		{
+			g.switchDirection();
+		}
+
+		g.move();
+
+		gotoxy(Ghostloc.x, Ghostloc.y);
+		_map.printTile(Ghostloc);
 	}
-	curPos.setXY(x, y);
-	return curPos;
 }
 
-Position Game::getNextNextPos()
-{
-	Position curPos = _pacman.getLocation();
-	int x = curPos.x;
-	int y = curPos.y;
-
-	switch (_pacman.getDirection())
-	{
-	case 2: // LEFT
-		x -= 2;
-		break;
-	case 3: // RIGHT
-		x += 2;
-		break;
-	}
-	curPos.setXY(x, y);
-	return curPos;
-}
 
 int Game::pacmanGhostMeet()
 {
@@ -274,7 +215,7 @@ char Game::pause()
 	} while (input != ESC && input != ENTER);
 	if (input == ESC)
 	{
-		gotoxy(defHeight, 0);
+		gotoxy(0, defHeight + 2);
 		for (int i = 0; i < 57; i++)
 		{
 			cout << " ";

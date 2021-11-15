@@ -13,12 +13,14 @@ public:
 
 	//getters
 	Position getLocation() const;
+	Position::compass      getDirection() const;
 
 	//setters
 	void setColour(Colour c);
 	void setFigure(const char c);
 	void setDirection(Position::compass dir);
 	void setLocation(Position loc);
+	void switchDirection();
 	void move();
 
 private: //data members

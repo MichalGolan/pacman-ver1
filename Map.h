@@ -15,15 +15,16 @@ const int defWidth = 76;
 class Map
 {
 public:
-    //                0      1       2         3       4              5
-    enum tileType { EMPTY, WALL, BREADCRUMB, GHOST, PACMAN, GHOSTandBREADCRUMB };
+    //                0      1       2      
+    enum tileType { EMPTY, WALL, BREADCRUMB };
     const char typeKey[3] = { ' ', '#', '.' };
 
 public:
     Map();//char** newMap, int width, int height);
     ~Map();
     void print();
-    
+    void printTile(Position pos);
+
     void       setTile(Position pos, tileType newtype);
     tileType   getTileType(Position pos) const; //check how to return the enum and not index
 

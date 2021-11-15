@@ -21,9 +21,9 @@ public:
 	void set(int& play);
 	void run();
 	int validMove(char key);
-	void handleNextMove();
-	Position getNextPos();
-	Position getNextNextPos();
+	int isNextLocationWall(Position::compass dir, Position location);
+	void handlePacmanMove();
+	void handleGhostMove();
 	int pacmanGhostMeet();
 	char pause();
 	void printPause();

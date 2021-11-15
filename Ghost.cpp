@@ -15,6 +15,11 @@ Position  Ghost::getLocation() const
 	return _location;
 }
 
+Position::compass Ghost::getDirection() const
+{
+	return _direction;
+}
+
 void Ghost::setColour(Colour c) {
 	_colour = c;
 }
@@ -30,6 +35,20 @@ void Ghost::setDirection(Position::compass dir) {
 void Ghost::setLocation(Position loc)
 {
 	_location = loc;
+}
+
+void Ghost::switchDirection()
+{
+	int currdir = _direction;
+	if (currdir % 2 == 0)
+	{
+		currdir++;
+	}
+	else
+	{
+		currdir--;
+	}
+	_direction = (Position::compass)currdir;
 }
 
 void Ghost::move()

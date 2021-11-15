@@ -6,7 +6,7 @@
 class Pacman {
 
 public:
-	Pacman(Position pos = { 1,1 }, Position::compass dir = Position::STAY, char figure = '@', Colour colour = WHITE);
+	Pacman(Position pos = { 2,1 }, Position::compass dir = Position::STAY, char figure = '@', Colour colour = WHITE);
 
 	void setArrowKeys(const char* keys);  // "waxd s"
 	void setColour(Colour c);

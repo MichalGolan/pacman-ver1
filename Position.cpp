@@ -12,7 +12,7 @@ void Position::draw(char ch) const
 	cout << ch << endl;
 }
 
-void Position::update()  
+void Position::randUpdate()  
 {
 	int dir = rand() % 4; //--> 0, 1, 2, 3
 	update((compass)dir);
@@ -49,7 +49,7 @@ void Position::move(Colour colour, char c, compass direction)
 void Position::moveRand(Colour colour, char c)
 {
 	draw(' ');
-	update();
+	randUpdate();
 	setTextColour(colour);
 	draw(c);
 }
