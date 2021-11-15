@@ -251,7 +251,7 @@ Position Game::getNextNextPos()
 
 int Game::pacmanGhostMeet()
 {
-	return (_pacman.getLocation().compare(_ghosts[0].getLocation()) && _pacman.getLocation().compare(_ghosts[1].getLocation()));
+	return ((_pacman.getLocation() ==_ghosts[0].getLocation()) || (_pacman.getLocation()==_ghosts[1].getLocation()));
 }
 
 void Game::printMenu() const

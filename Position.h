@@ -19,7 +19,8 @@ public:
 	void move(Colour colour, char c, compass direction);
 	void moveRand(Colour colour, char c);
 
-	int compare(Position a) const;
+	int operator==(const Position& other);
+	int operator!=(const Position& other);
 
 private:
 	int x;

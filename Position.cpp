@@ -54,7 +54,12 @@ void Position::moveRand(Colour colour, char c)
 	draw(c);
 }
 
-int Position::compare(Position a) const
+int Position::operator==(const Position& other)
 {
-	return (a.x == x && a.y == y);
+	return(x == other.x && y == other.y);
+}
+
+int Position::operator!=(const Position& other)
+{
+	return(x != other.x || y != other.y);
 }
