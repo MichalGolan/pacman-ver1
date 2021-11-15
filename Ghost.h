@@ -6,18 +6,26 @@
 
 class Ghost {
 
-	Position _location;
-	int _direction;
-	char _figure;
-	Colour _colour;
-
 public:
-	Position getLocation();
+	//c'tors
+	Ghost();
+	Ghost(Position location, Position::compass direction, char figure, Colour colour);
+
+	//getters
+	Position getLocation() const;
+
+	//setters
 	void setColour(Colour c);
 	void setFigure(const char c);
-	void setDirection(int dir);
+	void setDirection(Position::compass dir);
 	void setLocation(Position loc);
 	void move();
+
+private: //data members
+	Position              _location;
+	Position::compass     _direction;
+	char                  _figure;
+	Colour                _colour;
 	
 };
 

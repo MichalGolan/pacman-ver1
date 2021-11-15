@@ -1,6 +1,16 @@
 #include "Ghost.h"
 
-Position  Ghost::getLocation()
+Ghost::Ghost() : _location({ 1,1 }), _direction(Position::LEFT), _figure('$'), _colour(WHITE) {}
+
+Ghost::Ghost(Position location, Position::compass direction, char figure, Colour colour)
+{
+	setLocation(location);
+	setDirection(direction);
+	setFigure(figure);
+	setColour(colour);
+}
+
+Position  Ghost::getLocation() const
 {
 	return _location;
 }
@@ -13,7 +23,7 @@ void Ghost::setFigure(const char c) {
 	_figure = c;
 }
 
-void Ghost::setDirection(int dir) {
+void Ghost::setDirection(Position::compass dir) {
 	_direction = dir;
 }
 
@@ -24,14 +34,6 @@ void Ghost::setLocation(Position loc)
 
 void Ghost::move()
 {
-	//assuming the next move is valid --> this will be checked before the call for move
-	// print ' '
-	//update x y locatoin
-	//colour
-	//draw
-	_location.draw(' ');
-	_location.move(_direction);
-	setTextColour(_colour);
-	_location.draw(_figure);
+	_location.move(_colour, _figure, _direction);
 }
 

@@ -4,18 +4,30 @@
 #include "General.h"
 
 class Position {
-	int x;
-	int y;
-	friend class Game;	
-	friend class Map;
+public:
+	enum compass { UP, DOWN, LEFT, RIGHT, STAY };
 	
 public:
 	Position(int _x = 1, int _y = 1) : x(_x), y(_y) {}; 
+
 	void setXY(int _x, int _y);
+
 	void draw(char ch) const;
-	void move() ;
-	void move(int direction);
-	int compare(Position a);
+
+	void update();
+	void update(compass direction);
+	void move(Colour colour, char c, compass direction);
+	void moveRand(Colour colour, char c);
+
+	int operator==(const Position& other);
+	int operator!=(const Position& other);
+
+private:
+	int x;
+	int y;
+
+	friend class Game;
+	friend class Map;
 };
 
 #endif

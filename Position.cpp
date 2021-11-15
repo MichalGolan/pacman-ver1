@@ -12,33 +12,54 @@ void Position::draw(char ch) const
 	cout << ch << endl;
 }
 
-void Position::move()  
+void Position::update()  
 {
-	int dir = rand() % 4;
-	move(dir);
+	int dir = rand() % 4; //--> 0, 1, 2, 3
+	update((compass)dir);
 }
 
-void Position::move(int direction)
+void Position::update(compass direction)
 {
 	switch (direction) {
-	case 0: // UP
+	case UP: 
 		--y;
 		break;
-	case 1: // DOWN
+	case DOWN: 
 		++y;
 		break;
-	case 2: // LEFT
+	case LEFT:
 		--x;
 		break;
-	case 3: // RIGHT
+	case RIGHT:
 		++x;
 		break;
-	case 4: // STAY
+	case STAY:
 		break;
 	}
 }
 
-int Position::compare(Position a)
+void Position::move(Colour colour, char c, compass direction)
 {
-	return (a.x == x && a.y == y);
+	draw(' ');
+	update(direction);
+	setTextColour(colour);
+	draw(c);
+}
+
+void Position::moveRand(Colour colour, char c)
+{
+	draw(' ');
+	update();
+	setTextColour(colour);
+	draw(c);
+}
+
+int Position::operator==(const Position& other)
+{
+	return(x == other.x && y == other.y);
+}
+
+int Position::operator!=(const Position& other)
+{
+	return(x != other.x || y != other.y);
 }
