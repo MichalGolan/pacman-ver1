@@ -20,13 +20,14 @@ public:
 	//gameplay methods
 	void set(int& play);
 	void run();
-	int validMove(char key);
+	int validMove(char& key);
 	int isNextLocationWall(Position::compass dir, Position location);
 	void handlePacmanMove();
 	void handleGhostMove();
 	int pacmanGhostMeet();
-	char pause();
+	void pause(int& play);
 	void printPause();
+	void endGame(int& play);
 
 	//printing methods
 	void printInfo();

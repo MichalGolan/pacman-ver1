@@ -15,3 +15,11 @@ void gotoxy(int x, int y)
 void setTextColour(Colour colourToSet) {
 	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), (int)colourToSet);
 }
+
+void lower(char& ch)
+{
+	if (ch >= 'A' && ch <= 'Z')
+	{
+		ch = ch + ('a' - 'A');
+	}
+}

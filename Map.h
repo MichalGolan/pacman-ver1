@@ -27,13 +27,18 @@ public:
 
     void       setTile(Position pos, tileType newtype);
     tileType   getTileType(Position pos) const; //check how to return the enum and not index
-
+    Position   getCorner(int index) const;
+    int        getMaxBC() const;
 private:
     int         _width;  //coloumns --->
     int         _height; //rows    |
                         //        v
     tileType**  _map;
     int         _totalBC;
+    Position    _corners[4];
+
+    void        setCorners();
+
 };
 
 

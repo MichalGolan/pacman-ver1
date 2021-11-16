@@ -21,10 +21,10 @@ void Game::initGhosts()
 		wantedColour = WHITE; // choose colour later *******************
 	}
 	
-	Ghost ghost1({ 72,1 }, Position::DOWN, '1', wantedColour);
-	Ghost ghost2({ 2,17 }, Position::RIGHT, '2', wantedColour);
+	Ghost ghost1(_map.getCorner(1), Position::DOWN, '1', wantedColour);
+	Ghost ghost2(_map.getCorner(2), Position::RIGHT, '2', wantedColour);
 
-	_ghosts[0] = ghost1; //will use ghost's copy constructor
+	_ghosts[0] = ghost1; 
 	_ghosts[1] = ghost2; 
 }
 
@@ -46,6 +46,7 @@ void Game::set(int &play)
 		// run ends when: 
 		// 1. lives == 0
 		// 2. score == total bread
+		// 3. when user press enter during pause
 		
 		break;
 	}
@@ -71,21 +72,18 @@ void Game::run()
 {
 	_map.print();
 	//print game data --> function --> Score: 000     Game: on!          Lives: 03
-
-	//get input for moves for pacman
 	//initialize movments both pacman and ghost
-	int timer = 0;
+	int timer = 0, play = 1;
 	char key = 0;
 	do {
-		//print pacman and ghosts - always or only if location changed?
 		//if  printing always might create a sort of "blinking" of the figure, if the location is the same
 		_pacman.move();
 		if (_kbhit() ) //only if new input in buffer
 		{
-			key = _getch(); // add lowercase func *************
+			key = _getch(); 
 			if (key == ESC)
 			{
-				key = pause();
+				pause(play);
 			}
 			else if (validMove(key))
 			{
@@ -100,27 +98,16 @@ void Game::run()
 		timer++;
 		handlePacmanMove();
 		Sleep(1000);
-	} while (key != ENTER); //this needs to change! exiting this loop is for QUITTING THE GAME! 
-	                      //NOT FOR PAUSE!
-	//pause function should occur in the scope of this loop. when entering it,
-	//it will "pause" the loop and therefore the run function until we finish it. 
-	//
-	//inside the pause - a while loop waiting for esc or some EXIT key to be chosen
-	//
-	//if ESC hit, the while inside pause will stop. 
-	//we will return to the 'run' while loop with some flag to know that we need to continue, 
-	//and will to continue as we were. (as stacking function works...)
-	//
-	//if EXIT key will be chose we will return with a flag that we need to finish the game,
-	//the while loop in run will catch that and we will exit the while loop therefore exiting the 'run'
-	//therefore going back to game menu that alled for run... :)
-
+		endGame(play);
+	} while (play == 1); 
+	// print messeage according to play
 	//setTextColor(Color::WHITE);
 	system("CLS");
 }
 
-int Game::validMove(char key) // is input ok?
+int Game::validMove(char& key) // is input ok?
 {
+	lower(key);
 	if (_pacman.getDirectionKey(key) != -1)
 	{
 		return 1;
@@ -201,7 +188,7 @@ void Game::printMenu() const
 		"8 - Present instructions and keys" << endl << "9 - EXIT" << endl;
 }
 
-char Game::pause()
+void Game::pause(int & play)
 {
 	char input = 1;
 	printPause();
@@ -221,9 +208,24 @@ char Game::pause()
 			cout << " ";
 		}
 	}
-
-	return input;
+	else
+	{
+		play = 3;
+	}
 }
+
+void Game::endGame(int& play)
+{
+	if (_breadcrumbs == _map.getMaxBC()) // all breadcrumbs got eaten --> win game
+	{
+		play = 2;
+	}
+	else if (_lives == 0)
+	{
+		play = 0;
+	}
+}
+
 
 void Game::printPause()
 {

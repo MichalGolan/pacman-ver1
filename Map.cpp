@@ -44,7 +44,7 @@ Map::Map() : _width(defWidth), _height(defHeight), _totalBC(0) //empty construct
             }
         }
     }
-   
+    setCorners();
 }
 
 Map::~Map()
@@ -87,4 +87,24 @@ void Map::printTile(Position pos)
     int y = pos.y;
     cout << typeKey[_map[y][x]];
 
+}
+
+Position Map::getCorner(int index) const
+{
+    return _corners[index];
+}
+
+int Map::getMaxBC() const
+{
+    return _totalBC;
+}
+
+
+void Map::setCorners()
+{
+    //(coloumn, row)
+    _corners[0].setXY(2, 1); //upper left
+    _corners[1].setXY(_width - 4, 1); //upper right
+    _corners[2].setXY(2, _height - 2); //lower left
+    _corners[3].setXY(_width - 4, _height - 2); //lower right
 }
