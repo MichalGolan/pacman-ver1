@@ -21,16 +21,17 @@ public:
 	void set(int& play);
 	void run();
 	int validMove(char& key);
-	int isNextLocationWall(Position::compass dir, Position location);
+	int isNextLocationWall(Position::compass dir, Position nextLocation);
 	void handlePacmanMove();
 	void handleGhostMove();
 	int pacmanGhostMeet();
 	void pause(int& play);
-	void printPause();
 	void endGame(int& play);
 
 	//printing methods
-	void printInfo();
+	void printByIndex(int index) const;
+
+	void printInfo() const;
 	void printMenu() const;
 	
 

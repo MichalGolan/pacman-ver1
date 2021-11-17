@@ -1,8 +1,8 @@
 #include "Map.h"
 
 Map::Map() : _width(defWidth), _height(defHeight), _totalBC(0) //empty constructor
-                                                    //this function construts a new map. given a char array, 
-                                                    //it 'translates' it to a tileType array
+                                                               //this function construts a new map. given a char array, 
+                                                               //it 'translates' it to a tileType array
 {
     char staticMap[19][76] = { {"###########################################################################"},
     {"#                     #                             #                     #"},{"#   ###############   #   #######################   #   ###############   #"},
@@ -69,7 +69,7 @@ Map::tileType Map::getTileType(Position pos) const
     return _map[pos.y][pos.x];
 }
 
-void Map::print()
+void Map::print() const
 {
     for (int i = 0; i < _height; i++)
     {
@@ -81,7 +81,7 @@ void Map::print()
     }
 }
 
-void Map::printTile(Position pos)
+void Map::printTile(Position pos) const
 {
     int x = pos.x;
     int y = pos.y;

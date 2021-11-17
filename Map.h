@@ -22,13 +22,14 @@ public:
 public:
     Map();//char** newMap, int width, int height);
     ~Map();
-    void print();
-    void printTile(Position pos);
+    void print() const;
+    void printTile(Position pos) const;
 
     void       setTile(Position pos, tileType newtype);
     tileType   getTileType(Position pos) const; //check how to return the enum and not index
     Position   getCorner(int index) const;
     int        getMaxBC() const;
+
 private:
     int         _width;  //coloumns --->
     int         _height; //rows    |
