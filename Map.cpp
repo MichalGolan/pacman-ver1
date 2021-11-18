@@ -37,10 +37,8 @@ Map::Map() : _width(defWidth), _height(defHeight), _totalBC(0) //empty construct
                     _map[i][j] = BREADCRUMB;
                     _totalBC++;
                 }
-
                 else
                     _map[i][j] = EMPTY;
-
             }
         }
     }

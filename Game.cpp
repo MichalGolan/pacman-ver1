@@ -31,10 +31,11 @@ void Game::initGhosts()
 
 void Game::set(int &play)
 {
-	int choice;
-	printByIndex(4);
-	//printMenu();
-	cin >> choice;
+	char c;
+	printByIndex(MENU);
+	fflush(stdin);
+	cin >> c;
+	int choice = c - '0';
 
 	switch (choice)
 	{
@@ -52,8 +53,7 @@ void Game::set(int &play)
 	}
 	case 8:
 	{
-		//printInfo();
-		printByIndex(3); // print information and instructions
+		printByIndex(choice); // print information and instructions
 		getch();
 		system("CLS");
 		break;
@@ -61,11 +61,11 @@ void Game::set(int &play)
 	case 9:
 	{
 		cout << "Bye" << endl;
-		play = 0;
+		play = LOSE;
 		break;
 	}
 	default:
-		cout << "check";
+		cout << "Invalid input, please try again." << endl << endl;
 		break;
 	}
 }
@@ -73,11 +73,11 @@ void Game::set(int &play)
 void Game::run()
 {
 	_map.print();
-	printByIndex(5);
+	printByIndex(DATALINE);
 
 	//initialize movments both pacman and ghost
 
-	int timer = 0, play = 1;
+	int timer = 0, play = GO;
 	char key = 0;
 	do {
 		//if  printing always might create a sort of "blinking" of the figure, if the location is the same
@@ -101,9 +101,9 @@ void Game::run()
 		}
 		timer++;
 		handlePacmanMove();
-		Sleep(100); 
+		Sleep(1000); 
 		endGame(play);
-	} while (play == 1); 
+	} while (play == GO); 
 
 	//setTextColor(Color::WHITE);
 	system("CLS");
@@ -119,7 +119,7 @@ int Game::validMove(char& key) // is input ok?
 	return 0;
 }
 
-int Game::isNextLocationWall(Position::compass dir, Position nextLocation)
+int Game::isNextLocationWall(Position::compass dir, Position nextLocation) const
 {
 	if ((dir == Position::UP || dir == Position::DOWN) && _map.getTileType(nextLocation) == Map::WALL) // direction is up or down && a wall
 	{
@@ -141,7 +141,7 @@ void Game::handlePacmanMove()
 	Position nextpos = _pacman.getLocation();
 	nextpos.update(_pacman.getDirection());
 
-	if (isNextLocationWall(_pacman.getDirection(), nextpos))
+	if (isNextLocationWall(_pacman.getDirection(), nextpos) || notAPath())
 	{
 		_pacman.setDirection(Position::STAY);
 	}
@@ -149,7 +149,7 @@ void Game::handlePacmanMove()
 	{
 		_map.setTile(nextpos, Map::EMPTY);
 		_breadcrumbs++;
-		printByIndex(5);
+		printByIndex(DATALINE);
 	}
 	if (pacmanGhostMeet())// check if pacman and ghost collide 
 	{
@@ -158,7 +158,16 @@ void Game::handlePacmanMove()
 
 }
 //if ghost --> restart board(include restart location of pacman (1 1) and init for ghost), live--
-
+int Game::notAPath() const
+{
+	Position::compass dir = _pacman.getDirection();
+	// if movement is vertical and location coloumn not even -->  meaning not a legitimate path #_._#	return _pacman.getDirection() && _pacman up or down even
+	if ((dir == Position::UP || dir == Position::DOWN) && _pacman.getLocation().x % 2 != 0) 
+	{
+		return 1;
+	}
+	return 0;
+}
 
 void Game::handleGhostMove()
 {
@@ -185,12 +194,6 @@ void Game::handleGhostMove()
 int Game::pacmanGhostMeet()
 {
 	return ((_pacman.getLocation() ==_ghosts[0].getLocation()) || (_pacman.getLocation()==_ghosts[1].getLocation()));
-}
-
-void Game::printMenu() const
-{
-	cout << "Welcome to the pacman!" << endl << "please press your choice:" << endl << "1 - start a new game" << endl <<
-		"8 - Present instructions and keys" << endl << "9 - EXIT" << endl;
 }
 
 void Game::pause(int & play)
@@ -221,33 +224,32 @@ void Game::pause(int & play)
 
 void Game::endGame(int& play)
 {
+	char c;
 	if (_breadcrumbs == _map.getMaxBC() || _lives == 0) // all breadcrumbs got eaten --> win game
 	{
 		if (_breadcrumbs == _map.getMaxBC())
 		{
-			play = 2;
+			play = WIN;
 		}
 		else
 		{
-			play = 0;
+			play = LOSE;
 		}
 		printByIndex(play);
+		cout << "Press any key to continue" << endl;
 		fflush(stdin);
-		while (!_kbhit())
-		{
-
-		}
+		getch();
+		fflush(stdin);
 	}	
 }
 
-void Game::printByIndex(int index) const// all messages printed in the messeage line
+void Game::printByIndex(int index) const// all messages printed in the message line
 {
-
 	switch (index)
 	{
-	case 0: // game over
+	case LOSE: // game over
 	{
-		gotoxy(0, defHeight + 2);
+		gotoxy(0, defHeight + 2); //go to message line
 		cout << "GAME OVER. you've lost all your lives." << endl;
 		break;
 	}
@@ -257,13 +259,13 @@ void Game::printByIndex(int index) const// all messages printed in the messeage 
 		cout << "game paused, press ESC to continue or ENTER to quit game" << endl;
 		break;
 	}
-	case 2: // game won
+	case WIN: // game won
 	{
 		gotoxy(0, defHeight + 2);
-		cout << "YOU WIN! YOU DA BEST ☺" << endl;
+		cout << "YOU WIN! YOU DA BEST" << endl; 
 		break;
 	}
-	case 3: // info and instructions
+	case 8: // info and instructions
 	{
 		cout << "Pacman game instructions:" << endl
 			<< "Keys:" << endl
@@ -277,14 +279,15 @@ void Game::printByIndex(int index) const// all messages printed in the messeage 
 			<< "Once a ghost hits you, you lose a life. Once you lose all your lives it is GAME OVER!" << endl
 			<< "Good Luck!" << endl << endl
 			<< "Press any key to continue:" << endl;
+		break;
 	}
-	case 4: // main menu
+	case MENU:
 	{
 		cout << "Welcome to the pacman!" << endl << "please press your choice:" << endl << "1 - start a new game" << endl <<
 			"8 - Present instructions and keys" << endl << "9 - EXIT" << endl;
 		break;
 	}
-	case 5:
+	case DATALINE:
 	{
 		gotoxy(0, defHeight + 1);
 		cout << "score: " << _breadcrumbs << " | " << "Lives: " << _lives;
@@ -295,18 +298,4 @@ void Game::printByIndex(int index) const// all messages printed in the messeage 
 	}
 }
 
-void Game::printInfo() const
-{
-	cout << "Pacman game instructions:" << endl
-		<< "Keys:" << endl
-		<< "LEFT a or A" << endl
-		<< "RIGHT d or D" << endl
-		<< "UP w or W" << endl
-		<< "Down x or X" << endl
-		<< "STAY s or S" << endl << endl
-		<< "To Pause, press ESC at any time" << endl << endl
-		<< "Your Goal: eat all the breadcrumbs, avoid all the ghosts!" << endl
-		<< "Once a ghost hits you, you lose a life. Once you lose all your lives it is GAME OVER!" << endl
-		<< "Good Luck!" << endl << endl
-		<< "Press any key to continue:" << endl;
-}
+

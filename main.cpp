@@ -4,7 +4,7 @@
 int main()
 {
 	
-	int play = 1;
+	int play = GO;
 	do
 	{
 		Game game;
