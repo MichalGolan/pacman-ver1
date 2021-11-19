@@ -20,15 +20,17 @@ public:
 	//c'tors
 	Game();
 
-	//setters
-	void initGhosts();
-
 	//gameplay methods
 	void set(int& play);
+
+private:
 	void run();
 	int validMove(char& key);
-	int isNextLocationWall(Position::compass dir, Position nextLocation) const;
+	int isNextLocationWallorTunnel(Position::compass dir, Position nextLocation) const;
 	void handlePacmanMove();
+	void handleTunnel(Position pos);
+	Position isATunnel(Position pos) const;
+	void resetCreatures();
 	int notAPath() const;
 	void handleGhostMove();
 	int pacmanGhostMeet();
@@ -37,6 +39,9 @@ public:
 
 	//printing methods
 	void printByIndex(int index) const;	
+
+	//setters
+	void initGhosts();
 
 private: //data members
 	Map    _map;

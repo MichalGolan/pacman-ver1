@@ -15,9 +15,9 @@ const int defWidth = 76;
 class Map
 {
 public:
-    //                0      1       2      
-    enum tileType { EMPTY, WALL, BREADCRUMB };
-    const char typeKey[3] = { ' ', '#', '.' };
+    //                0      1       2         3
+    enum tileType { EMPTY, WALL, BREADCRUMB, TUNNEL};
+    const char typeKey[4] = { ' ', '#', '.', ' '};
 
 public:
     Map();//char** newMap, int width, int height);
@@ -27,19 +27,22 @@ public:
 
     void       setTile(Position pos, tileType newtype);
     tileType   getTileType(Position pos) const; //check how to return the enum and not index
+    tileType   getTileType(int _x, int _y) const;
+
     Position   getCorner(int index) const;
     int        getMaxBC() const;
+    int        getWidth() const;
+    int        getHeight() const;
 
 private:
     int         _width;  //coloumns --->
     int         _height; //rows    |
-                        //        v
+                        //         v
     tileType**  _map;
     int         _totalBC;
     Position    _corners[4];
 
     void        setCorners();
-
 };
 
 

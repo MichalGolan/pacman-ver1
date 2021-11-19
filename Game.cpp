@@ -80,8 +80,6 @@ void Game::run()
 	int timer = 0, play = GO;
 	char key = 0;
 	do {
-		//if  printing always might create a sort of "blinking" of the figure, if the location is the same
-		_pacman.move();
 		if (_kbhit() ) //only if new input in buffer
 		{
 			key = _getch(); 
@@ -101,7 +99,8 @@ void Game::run()
 		}
 		timer++;
 		handlePacmanMove();
-		Sleep(1000); 
+		_pacman.move();
+		Sleep(250); 
 		endGame(play);
 	} while (play == GO); 
 
@@ -119,16 +118,31 @@ int Game::validMove(char& key) // is input ok?
 	return 0;
 }
 
-int Game::isNextLocationWall(Position::compass dir, Position nextLocation) const
+// this function check if next location is a wall or a tunnel, seperating cases by direction (if up or down, if left or down)
+int Game::isNextLocationWallorTunnel(Position::compass dir, Position nextLocation) const
 {
-	if ((dir == Position::UP || dir == Position::DOWN) && _map.getTileType(nextLocation) == Map::WALL) // direction is up or down && a wall
+	if ((dir == Position::UP || dir == Position::DOWN)) // direction is up or down
 	{
-		return 1;
+		if (_map.getTileType(nextLocation) == Map::WALL) // a wall
+		{
+			return 1;
+		}
+		else if (_map.getTileType(nextLocation) == Map::TUNNEL) // tunnel
+		{
+			return 2;
+		}
 	}
 	nextLocation.update(dir);// getting 2 steps from original location, usefull for left/right movement
-	if ((dir == Position::LEFT || dir == Position::RIGHT) && _map.getTileType(nextLocation) == Map::WALL) // direction is left or right && a wall
+	if ((dir == Position::LEFT || dir == Position::RIGHT)) // direction is left or right 
 	{
-		return 1;
+		if (_map.getTileType(nextLocation) == Map::WALL) // a wall
+		{
+			return 1;
+		}
+		else if (_map.getTileType(nextLocation) == Map::TUNNEL) // tunnel
+		{
+			return 2;
+		}
 	}
 	return 0;
 }
@@ -140,8 +154,13 @@ void Game::handlePacmanMove()
 {
 	Position nextpos = _pacman.getLocation();
 	nextpos.update(_pacman.getDirection());
+	int wallorTunnel = isNextLocationWallorTunnel(_pacman.getDirection(), nextpos);
 
-	if (isNextLocationWall(_pacman.getDirection(), nextpos) || notAPath())
+	if (wallorTunnel == 2)  // wall or tunnel or not a real path
+	{
+		handleTunnel(nextpos); 
+	}
+	else if (wallorTunnel == 1 || notAPath())
 	{
 		_pacman.setDirection(Position::STAY);
 	}
@@ -153,10 +172,59 @@ void Game::handlePacmanMove()
 	}
 	if (pacmanGhostMeet())// check if pacman and ghost collide 
 	{
-		//handle boom
+		_lives--;
+		resetCreatures();
+		printByIndex(DATALINE);
 	}
-
 }
+void Game::handleTunnel(Position pos) 
+{
+	Position newPos = isATunnel(pos);
+	if (newPos == pos)
+	{
+		_pacman.setDirection(Position::STAY);
+	}
+	else
+	{
+		_map.printTile(_pacman.getLocation());
+		_pacman.setLocation(newPos);
+	}
+}
+
+Position Game::isATunnel(Position pos) const
+{
+	if (pos.y == 0 && _map.getTileType(pos.x, _map.getHeight() - 1) == Map::TUNNEL) 
+	{
+		return { pos.x, _map.getHeight() - 1};
+	}
+	if (pos.y == _map.getHeight() - 1 && _map.getTileType(pos.x, 0) == Map::TUNNEL)
+	{
+		return  { pos.x, 0 };
+	}
+	if (pos.x == 1 && _map.getTileType(_map.getWidth() - 2, pos.y) == Map::TUNNEL)
+	{
+		return { _map.getWidth() - 3, pos.y };
+	}	
+	if (pos.x ==  _map.getWidth() - 3 & _map.getTileType(0 , pos.y) == Map::TUNNEL)
+	{
+		return { 1, pos.y };
+	}
+	return pos;
+}
+
+void Game::resetCreatures()
+{
+	_map.printTile(_pacman.getLocation());
+	_map.printTile(_ghosts[0].getLocation());
+	_map.printTile(_ghosts[1].getLocation());
+
+	_pacman.setLocation(_map.getCorner(0));
+	_ghosts[0].setLocation(_map.getCorner(1));
+	_ghosts[1].setLocation(_map.getCorner(2));
+	
+	_pacman.setDirection(Position::STAY);
+}
+
 //if ghost --> restart board(include restart location of pacman (1 1) and init for ghost), live--
 int Game::notAPath() const
 {
@@ -178,14 +246,11 @@ void Game::handleGhostMove()
 
 		NextGhostloc.update(g.getDirection());
 
-		if (isNextLocationWall(g.getDirection(), NextGhostloc))
+		if (isNextLocationWallorTunnel(g.getDirection(), NextGhostloc))
 		{
 			g.switchDirection();
 		}
-
 		g.move();
-
-		gotoxy(Ghostloc.x, Ghostloc.y);
 		_map.printTile(Ghostloc);
 	}
 }
@@ -210,7 +275,7 @@ void Game::pause(int & play)
 	} while (input != ESC && input != ENTER);
 	if (input == ESC)
 	{
-		gotoxy(0, defHeight + 2);
+		gotoxy(0, _map.getHeight() + 2);
 		for (int i = 0; i < 57; i++)
 		{
 			cout << " ";
@@ -249,19 +314,19 @@ void Game::printByIndex(int index) const// all messages printed in the message l
 	{
 	case LOSE: // game over
 	{
-		gotoxy(0, defHeight + 2); //go to message line
+		gotoxy(0, _map.getHeight() + 2); //go to message line
 		cout << "GAME OVER. you've lost all your lives." << endl;
 		break;
 	}
 	case 1: // user pressed ESC
 	{
-		gotoxy(0, defHeight + 2);
+		gotoxy(0, _map.getHeight() + 2);
 		cout << "game paused, press ESC to continue or ENTER to quit game" << endl;
 		break;
 	}
 	case WIN: // game won
 	{
-		gotoxy(0, defHeight + 2);
+		gotoxy(0, _map.getHeight() + 2);
 		cout << "YOU WIN! YOU DA BEST" << endl; 
 		break;
 	}
@@ -289,7 +354,7 @@ void Game::printByIndex(int index) const// all messages printed in the message l
 	}
 	case DATALINE:
 	{
-		gotoxy(0, defHeight + 1);
+		gotoxy(0, _map.getHeight() + 1);
 		cout << "score: " << _breadcrumbs << " | " << "Lives: " << _lives;
 		break;
 	}

@@ -63,3 +63,8 @@ int Position::operator!=(const Position& other)
 {
 	return(x != other.x || y != other.y);
 }
+
+void Position::gotoPos()
+{
+	gotoxy(x, y);
+}
