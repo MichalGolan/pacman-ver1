@@ -9,7 +9,7 @@ class Ghost {
 public:
 	//c'tors
 	Ghost();
-	Ghost(Position location, Position::compass direction, char figure, Colour colour);
+	Ghost(Position location, Position::compass direction, char figure, Colour colour = WHITE);
 
 	//getters
 	Position getLocation() const;

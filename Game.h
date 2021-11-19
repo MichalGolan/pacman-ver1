@@ -13,7 +13,7 @@ const int GO = 1;
 const int WIN = 2;
 const int MENU = 4;
 const int DATALINE = 5;
-
+const int INVALID = 6;
 class Game {
 
 public:
@@ -24,6 +24,8 @@ public:
 	void set(int& play);
 
 private:
+	int askForColours();
+	void colourIt();
 	void run();
 	int validMove(char& key);
 	int isNextLocationWallorTunnel(Position::compass dir, Position nextLocation) const;

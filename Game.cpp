@@ -8,21 +8,21 @@ Game::Game() : _breadcrumbs(0), _lives(3), _colourfulGame(0)
 	initGhosts();
 }
 
-void Game::initGhosts()
+void Game::colourIt()
 {
-	Colour wantedColour;
+	if (_colourfulGame)
+	{
+		_pacman.setColour(YELLOW);
+		_ghosts[0].setColour(LIGHTMAGENTA);
+		_ghosts[1].setColour(LIGHTCYAN);
+		_map.setColourfulMap(_colourfulGame);
+	}
+}
 
-	if (!_colourfulGame)
-	{
-		wantedColour = WHITE;
-	}
-	else
-	{
-		wantedColour = WHITE; // choose colour later *******************
-	}
-	
-	Ghost ghost1(_map.getCorner(1), Position::DOWN, '1', wantedColour);
-	Ghost ghost2(_map.getCorner(2), Position::RIGHT, '2', wantedColour);
+void Game::initGhosts()
+{	
+	Ghost ghost1(_map.getCorner(1), Position::DOWN, '1');
+	Ghost ghost2(_map.getCorner(2), Position::RIGHT, '2');
 
 	_ghosts[0] = ghost1; 
 	_ghosts[1] = ghost2; 
@@ -43,6 +43,9 @@ void Game::set(int &play)
 	{
 		// ask for colours? update data member colourful game
 		system("CLS");
+		_colourfulGame = askForColours();
+		colourIt();
+
 		run(); 
 		// run ends when: 
 		// 1. lives == 0
@@ -65,10 +68,33 @@ void Game::set(int &play)
 		break;
 	}
 	default:
-		cout << "Invalid input, please try again." << endl << endl;
+		printByIndex(INVALID);
 		break;
 	}
 }
+
+int Game::askForColours()
+{
+	char c;
+	do
+	{
+		cout << "Would you like to play with colours?" << endl << "Y - Yes / N - No" << endl;
+		cin >> c;
+		lower(c);
+		if (c != 'y' && c != 'n')
+		{
+			printByIndex(INVALID);
+		}
+		system("cls");
+	} while (c != 'y' && c != 'n');
+
+	if (c == 'y')
+	{
+		return 1;
+	}
+	return 0;
+}
+
 
 void Game::run()
 {
@@ -310,6 +336,7 @@ void Game::endGame(int& play)
 
 void Game::printByIndex(int index) const// all messages printed in the message line
 {
+	setTextColour(WHITE);
 	switch (index)
 	{
 	case LOSE: // game over
@@ -357,6 +384,10 @@ void Game::printByIndex(int index) const// all messages printed in the message l
 		gotoxy(0, _map.getHeight() + 1);
 		cout << "score: " << _breadcrumbs << " | " << "Lives: " << _lives;
 		break;
+	}
+	case INVALID:
+	{
+		cout << "Invalid input, please try again." << endl << endl;
 	}
 	default:
 		break;

@@ -1,10 +1,10 @@
 #include "Map.h"
 
-Map::Map() : _width(defWidth), _height(defHeight), _totalBC(0) //empty constructor
-                                                               //this function construts a new map. given a char array, 
-                                                               //it 'translates' it to a tileType array
+Map::Map() : _width(defWidth), _height(defHeight), _totalBC(0), _colourfullMap(0)     //empty constructor
+                                                                                      //this function construts a new map. given a char array, 
+//it 'translates' it to a tileType array
 {
-    char staticMap[19][76] = { {"#############################+++++++++#####################################"},
+char staticMap[19][76] = { {"#############################+++++++++#####################################"},
 {"+ . . . . . . . . . . # . . . . . . . . . . . . . . # . . . . . . . . . . +"},
 {"+ . ############### . # . ####################### . # . ############### . +"},
 {"+ . # . . . . . . . . . . . . . . . . . . . . . # . # . . . . . . . . . . +"},
@@ -24,39 +24,39 @@ Map::Map() : _width(defWidth), _height(defHeight), _totalBC(0) //empty construct
 {"# . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . #"},
 {"#############################+++++++++#####################################"} };
 
-    char** myMap = new char* [19];
-    for (int i = 0; i < 19; i++)
-    {
-        myMap[i] = new char[76];
-        strcpy(myMap[i], staticMap[i]);
-    }
+char** myMap = new char* [19];
+for (int i = 0; i < 19; i++)
+{
+    myMap[i] = new char[76];
+    strcpy(myMap[i], staticMap[i]);
+}
 
-    _map = new tileType * [_height];
-    for (int i = 0; i < _height; i++)
+_map = new tileType * [_height];
+for (int i = 0; i < _height; i++)
+{
+    _map[i] = new tileType[_width];
+    for (int j = 0; j < _width; j++)
     {
-        _map[i] = new tileType[_width];
-        for (int j = 0; j < _width; j++)
+        if (myMap[i][j] == typeKey[WALL]) // if it's a '#' meaning wall
+            _map[i][j] = WALL;
+
+        else if (myMap[i][j] == '+')
         {
-            if (myMap[i][j] == typeKey[WALL]) // if it's a '#' meaning wall
-                _map[i][j] = WALL;
-
-            else if (myMap[i][j] == '+')
+            _map[i][j] = TUNNEL;
+        }
+        else
+        {
+            if (j % 2 == 0) //breadcrumbs appear in the even coloumns, for aesthetic purposes :)
             {
-                _map[i][j] = TUNNEL;
+                _map[i][j] = BREADCRUMB;
+                _totalBC++;
             }
             else
-            {
-                if (j % 2 == 0) //breadcrumbs appear in the even coloumns, for aesthetic purposes :)
-                {
-                    _map[i][j] = BREADCRUMB;
-                    _totalBC++;
-                }
-                else
-                    _map[i][j] = EMPTY;
-            }
+                _map[i][j] = EMPTY;
         }
     }
-    setCorners();
+}
+setCorners();
 }
 
 Map::~Map()
@@ -69,6 +69,11 @@ Map::~Map()
         }
         delete[] _map;
     }
+}
+
+void Map::setColourfulMap(int flag)
+{
+    _colourfullMap = flag;
 }
 
 void Map::setTile(Position pos, tileType newtype)
@@ -92,9 +97,22 @@ void Map::print() const
     {
         for (int j = 0; j < _width; j++)
         {
+            setTileColour(i, j);
             cout << typeKey[_map[i][j]];
         }
         cout << endl;
+    }
+}
+
+void Map::setTileColour(int i, int j) const
+{ 
+    if (_colourfullMap && _map[i][j] == WALL)
+    {
+        setTextColour(BLUE);
+    }
+    else if (_colourfullMap && _map[i][j] == BREADCRUMB)
+    {
+        setTextColour(BROWN);
     }
 }
 
@@ -102,6 +120,7 @@ void Map::printTile(Position pos) const
 {
     int x = pos.x;
     int y = pos.y;
+    setTileColour(y, x);
     gotoxy(x, y);
     cout << typeKey[_map[y][x]];
 }

@@ -25,6 +25,8 @@ public:
     void print() const;
     void printTile(Position pos) const;
 
+    void       setColourfulMap(int flag);
+    void       setTileColour(int i, int j) const;
     void       setTile(Position pos, tileType newtype);
     tileType   getTileType(Position pos) const; //check how to return the enum and not index
     tileType   getTileType(int _x, int _y) const;
@@ -41,6 +43,7 @@ private:
     tileType**  _map;
     int         _totalBC;
     Position    _corners[4];
+    int         _colourfullMap;
 
     void        setCorners();
 };
