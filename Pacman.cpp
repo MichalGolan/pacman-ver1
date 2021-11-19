@@ -48,11 +48,13 @@ Position::compass Pacman::getDirection() const
 	return _direction;
 }
 
+//calls for move of Position
 void Pacman::move()
 {
 	_location.move(_colour, _figure, _direction);
 }
 
+//returns the direction by given key according to our arrow keys
 int Pacman::getDirectionKey(char key) const
 {
 	for (int i = 0; i < 5; i++)

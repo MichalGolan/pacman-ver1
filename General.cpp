@@ -16,6 +16,7 @@ void setTextColour(Colour colourToSet) {
 	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), (int)colourToSet);
 }
 
+//lowercase a given character or leave it as it is if it's not a letter
 void lower(char& ch)
 {
 	if (ch >= 'A' && ch <= 'Z')

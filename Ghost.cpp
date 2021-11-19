@@ -37,6 +37,7 @@ void Ghost::setLocation(Position loc)
 	_location = loc;
 }
 
+//changes ghost's direction so it goes back and forth
 void Ghost::switchDirection()
 {
 	int currdir = _direction;
@@ -51,6 +52,7 @@ void Ghost::switchDirection()
 	_direction = (Position::compass)currdir;
 }
 
+//calls move for Position of ghost
 void Ghost::move()
 {
 	_location.move(_colour, _figure, _direction);

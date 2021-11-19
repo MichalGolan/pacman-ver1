@@ -8,34 +8,47 @@
 
 using namespace std;
 
+//gameplay keys consts
+const int ESC = 27;
+const int ENTER = 13;
+
+//printing and gameplay method consts
 const int LOSE = 0;
 const int GO = 1;
 const int WIN = 2;
 const int MENU = 4;
 const int DATALINE = 5;
 const int INVALID = 6;
+
 class Game {
 
 public:
-	//c'tors
+	//c'tor
 	Game();
 
-	//gameplay methods
+	//prepares to run the game
 	void set(int& play);
 
 private:
-	int askForColours();
+	//handle colours
+	int  askForColours();
 	void colourIt();
+
+	//runs the entire game
 	void run();
-	int validMove(char& key);
-	int isNextLocationWallorTunnel(Position::compass dir, Position nextLocation) const;
-	void handlePacmanMove();
-	void handleTunnel(Position pos);
+
+	//creatures movement
+	int      validMove(char& key);
+	int      isNextLocationWallorTunnel(Position::compass dir, Position nextLocation) const;
+	void     handleTunnel(Position pos);
 	Position isATunnel(Position pos) const;
-	void resetCreatures();
-	int notAPath() const;
-	void handleGhostMove();
-	int pacmanGhostMeet();
+	int      notAPath() const;
+	void     handlePacmanMove();
+	void     handleGhostMove();
+	int      pacmanGhostMeet();
+	void     resetCreatures();
+
+	//gameplay
 	void pause(int& play);
 	void endGame(int& play);
 

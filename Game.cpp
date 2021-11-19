@@ -1,13 +1,12 @@
 ﻿#include"Game.h"
 
-const int ESC = 27;
-const int ENTER = 13;
-
+//game's constructor
 Game::Game() : _breadcrumbs(0), _lives(3), _colourfulGame(0)
 {
 	initGhosts();
 }
 
+//if the player chose a colourful game will handle accordingly
 void Game::colourIt()
 {
 	if (_colourfulGame)
@@ -19,16 +18,17 @@ void Game::colourIt()
 	}
 }
 
+//sets the ghosts of the game
 void Game::initGhosts()
 {	
-	Ghost ghost1(_map.getCorner(1), Position::DOWN, '1');
-	Ghost ghost2(_map.getCorner(2), Position::RIGHT, '2');
+	Ghost ghost1(_map.getCorner(1), Position::DOWN, '$');
+	Ghost ghost2(_map.getCorner(2), Position::RIGHT, '$');
 
 	_ghosts[0] = ghost1; 
 	_ghosts[1] = ghost2; 
 }
 
-
+//handling user choice and running or exiting
 void Game::set(int &play)
 {
 	char c;
@@ -41,17 +41,10 @@ void Game::set(int &play)
 	{
 	case 1:
 	{
-		// ask for colours? update data member colourful game
 		system("CLS");
 		_colourfulGame = askForColours();
 		colourIt();
-
 		run(); 
-		// run ends when: 
-		// 1. lives == 0
-		// 2. score == total bread
-		// 3. when user press enter during pause
-		
 		break;
 	}
 	case 8:
@@ -73,6 +66,7 @@ void Game::set(int &play)
 	}
 }
 
+//ask for colours with input validation
 int Game::askForColours()
 {
 	char c;
@@ -95,16 +89,15 @@ int Game::askForColours()
 	return 0;
 }
 
-
+//RUNS THE GAME!!!
 void Game::run()
 {
 	_map.print();
 	printByIndex(DATALINE);
 
-	//initialize movments both pacman and ghost
-
 	int timer = 0, play = GO;
 	char key = 0;
+
 	do {
 		if (_kbhit() ) //only if new input in buffer
 		{
@@ -115,7 +108,7 @@ void Game::run()
 			}
 			else if (validMove(key))
 			{
-				_pacman.setDirection(_pacman.getDirectionKey(key));     // extract the direction by 'key', and setting new direction accordingly
+				_pacman.setDirection(_pacman.getDirectionKey(key)); // extract the direction by 'key', and setting new direction accordingly
 			}
 		}
 		if (timer % 2 == 0) //to make the ghost move 1/2 speed of pacman
@@ -124,17 +117,20 @@ void Game::run()
 			timer = 0;
 		}
 		timer++;
+
 		handlePacmanMove();
 		_pacman.move();
-		Sleep(250); 
+		Sleep(500); 
+
 		endGame(play);
+
 	} while (play == GO); 
 
-	//setTextColor(Color::WHITE);
 	system("CLS");
 }
 
-int Game::validMove(char& key) // is input ok?
+//checks if the key is a valid move key
+int Game::validMove(char& key)
 {
 	lower(key);
 	if (_pacman.getDirectionKey(key) != -1)
@@ -144,7 +140,7 @@ int Game::validMove(char& key) // is input ok?
 	return 0;
 }
 
-// this function check if next location is a wall or a tunnel, seperating cases by direction (if up or down, if left or down)
+// this function checks if next location is a wall or a tunnel, seperating cases by direction (if up or down, if left or down)
 int Game::isNextLocationWallorTunnel(Position::compass dir, Position nextLocation) const
 {
 	if ((dir == Position::UP || dir == Position::DOWN)) // direction is up or down
@@ -159,6 +155,7 @@ int Game::isNextLocationWallorTunnel(Position::compass dir, Position nextLocatio
 		}
 	}
 	nextLocation.update(dir);// getting 2 steps from original location, usefull for left/right movement
+
 	if ((dir == Position::LEFT || dir == Position::RIGHT)) // direction is left or right 
 	{
 		if (_map.getTileType(nextLocation) == Map::WALL) // a wall
@@ -174,19 +171,19 @@ int Game::isNextLocationWallorTunnel(Position::compass dir, Position nextLocatio
 }
 
 
-// this function check what to on the next move according to: if a wall, a breadcrumb or a ghost. it considers up down or left right
-// it takes into consideration the case #_@_# where it not allowed to move left or right
+// this function checks what is the next move according to: if a wall, a breadcrumb, a tunnel or a ghost. 
+// it considers directions
 void Game::handlePacmanMove()
 {
 	Position nextpos = _pacman.getLocation();
 	nextpos.update(_pacman.getDirection());
 	int wallorTunnel = isNextLocationWallorTunnel(_pacman.getDirection(), nextpos);
 
-	if (wallorTunnel == 2)  // wall or tunnel or not a real path
+	if (wallorTunnel == 2)  // tunnel
 	{
 		handleTunnel(nextpos); 
 	}
-	else if (wallorTunnel == 1 || notAPath())
+	else if (wallorTunnel == 1 || notAPath()) //wall or not a path
 	{
 		_pacman.setDirection(Position::STAY);
 	}
@@ -203,6 +200,8 @@ void Game::handlePacmanMove()
 		printByIndex(DATALINE);
 	}
 }
+
+//handling the movement for a tunnel
 void Game::handleTunnel(Position pos) 
 {
 	Position newPos = isATunnel(pos);
@@ -217,6 +216,7 @@ void Game::handleTunnel(Position pos)
 	}
 }
 
+//checks for a tunnel on the other side
 Position Game::isATunnel(Position pos) const
 {
 	if (pos.y == 0 && _map.getTileType(pos.x, _map.getHeight() - 1) == Map::TUNNEL) 
@@ -238,6 +238,7 @@ Position Game::isATunnel(Position pos) const
 	return pos;
 }
 
+//puts creatures back in their starting locations
 void Game::resetCreatures()
 {
 	_map.printTile(_pacman.getLocation());
@@ -251,11 +252,12 @@ void Game::resetCreatures()
 	_pacman.setDirection(Position::STAY);
 }
 
-//if ghost --> restart board(include restart location of pacman (1 1) and init for ghost), live--
+// if movement is vertical and location coloumn not even
+// meaning not a legitimate path (#_._#)	
 int Game::notAPath() const
 {
 	Position::compass dir = _pacman.getDirection();
-	// if movement is vertical and location coloumn not even -->  meaning not a legitimate path #_._#	return _pacman.getDirection() && _pacman up or down even
+	
 	if ((dir == Position::UP || dir == Position::DOWN) && _pacman.getLocation().x % 2 != 0) 
 	{
 		return 1;
@@ -263,12 +265,13 @@ int Game::notAPath() const
 	return 0;
 }
 
+//responsible for visual and logical ghost movement
 void Game::handleGhostMove()
 {
 	for (Ghost& g : _ghosts)
 	{
 		Position Ghostloc = g.getLocation();
-		Position NextGhostloc = g.getLocation(); ///// -------------- find another solution
+		Position NextGhostloc = g.getLocation();
 
 		NextGhostloc.update(g.getDirection());
 
@@ -281,12 +284,14 @@ void Game::handleGhostMove()
 	}
 }
 
-
+//checks if pacman and ghost collided
 int Game::pacmanGhostMeet()
 {
 	return ((_pacman.getLocation() ==_ghosts[0].getLocation()) || (_pacman.getLocation()==_ghosts[1].getLocation()));
 }
 
+//pauses the game
+//gives the user an option to exit the game from this window
 void Game::pause(int & play)
 {
 	char input = 1;
@@ -313,6 +318,7 @@ void Game::pause(int & play)
 	}
 }
 
+//this function checks for win or loss and handles it
 void Game::endGame(int& play)
 {
 	char c;
@@ -334,7 +340,9 @@ void Game::endGame(int& play)
 	}	
 }
 
-void Game::printByIndex(int index) const// all messages printed in the message line
+//printing function for all kinds of printing during the game
+
+void Game::printByIndex(int index) const
 {
 	setTextColour(WHITE);
 	switch (index)
@@ -347,13 +355,13 @@ void Game::printByIndex(int index) const// all messages printed in the message l
 	}
 	case 1: // user pressed ESC
 	{
-		gotoxy(0, _map.getHeight() + 2);
+		gotoxy(0, _map.getHeight() + 2); //go to message line
 		cout << "game paused, press ESC to continue or ENTER to quit game" << endl;
 		break;
 	}
 	case WIN: // game won
 	{
-		gotoxy(0, _map.getHeight() + 2);
+		gotoxy(0, _map.getHeight() + 2); //go to message line
 		cout << "YOU WIN! YOU DA BEST" << endl; 
 		break;
 	}
@@ -381,7 +389,7 @@ void Game::printByIndex(int index) const// all messages printed in the message l
 	}
 	case DATALINE:
 	{
-		gotoxy(0, _map.getHeight() + 1);
+		gotoxy(0, _map.getHeight() + 1); // data line
 		cout << "score: " << _breadcrumbs << " | " << "Lives: " << _lives;
 		break;
 	}

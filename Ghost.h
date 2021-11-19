@@ -12,7 +12,7 @@ public:
 	Ghost(Position location, Position::compass direction, char figure, Colour colour = WHITE);
 
 	//getters
-	Position getLocation() const;
+	Position               getLocation() const;
 	Position::compass      getDirection() const;
 
 	//setters
@@ -28,7 +28,6 @@ private: //data members
 	Position::compass     _direction;
 	char                  _figure;
 	Colour                _colour;
-	
 };
 
 

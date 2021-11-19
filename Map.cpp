@@ -2,73 +2,71 @@
 
 Map::Map() : _width(defWidth), _height(defHeight), _totalBC(0), _colourfullMap(0)     //empty constructor
                                                                                       //this function construts a new map. given a char array, 
-//it 'translates' it to a tileType array
+                                                                                      //it 'translates' it to a tileType array
 {
-char staticMap[19][76] = { {"#############################+++++++++#####################################"},
-{"+ . . . . . . . . . . # . . . . . . . . . . . . . . # . . . . . . . . . . +"},
-{"+ . ############### . # . ####################### . # . ############### . +"},
-{"+ . # . . . . . . . . . . . . . . . . . . . . . # . # . . . . . . . . . . +"},
-{"# . # . ########### . ##### . ############### . # . # . ##### . ####### . #"},
-{"# . # . . . . . . . . # . . . . . . . . . . . . . . . . . . . . # . . . . #"},
-{"# . . . ########### . # . ######### . ####### . ############# . # . ### . #"},
-{"# . # . . . . . . # . # . # . . . . . . . . # . # . . . . . . . # . . . . #"},
-{"# . # . ####### . # . # . ################### . # . ############# . ### . #"},
-{"# . # . # . . . . . . # . . . . . . . . . . . . # . . . . . . . . . . # . #"},
-{"# . # . ########### . . . ############### . # . # . ############### . . . #"},
-{"# . . . . . . . . . . # . . . . . . . . . . # . . . . . . . . . . . . # . #"},
-{"# . # . ########### . ######### . ########### . ############# . ####### . #"},
-{"# . # . . . . . . . . . . . . . . . . . . . . . . . . . . . # . . . . . . #"},
-{"+ . ### . # . ############################### . # . ##### . ########### . #"},
-{"+ . . . . # . # . . . . . . . . . . . . . . . . # . . . . . . . . . . . . #"},
-{"+ . ### . # . # . ########################### . # . ################### . #"},
-{"# . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . #"},
-{"#############################+++++++++#####################################"} };
-
-char** myMap = new char* [19];
-for (int i = 0; i < 19; i++)
-{
-    myMap[i] = new char[76];
-    strcpy(myMap[i], staticMap[i]);
-}
-
-_map = new tileType * [_height];
-for (int i = 0; i < _height; i++)
-{
-    _map[i] = new tileType[_width];
-    for (int j = 0; j < _width; j++)
+    char staticMap[19][76] = { 
+    {"#############################+++++++++#####################################"},
+    {"+ . . . . . . . . . . # . . . . . . . . . . . . . . # . . . . . . . . . . +"},
+    {"+ . ############### . # . ####################### . # . ############### . +"},
+    {"+ . # . . . . . . . . . . . . . . . . . . . . . # . # . . . . . . . . . . +"},
+    {"# . # . ########### . ##### . ############### . # . # . ##### . ####### . #"},
+    {"# . # . . . . . . . . # . . . . . . . . . . . . . . . . . . . . # . . . . #"},
+    {"# . . . ########### . # . ######### . ####### . ############# . # . ### . #"},
+    {"# . # . . . . . . # . # . # . . . . . . . . # . # . . . . . . . # . . . . #"},
+    {"# . # . ####### . # . # . ################### . # . ############# . ### . #"},
+    {"# . # . # . . . . . . # . . . . . . . . . . . . # . . . . . . . . . . # . #"},
+    {"# . # . ########### . . . ############### . # . # . ############### . . . #"},
+    {"# . . . . . . . . . . # . . . . . . . . . . # . . . . . . . . . . . . # . #"},
+    {"# . # . ########### . ######### . ########### . ############# . ####### . #"},
+    {"# . # . . . . . . . . . . . . . . . . . . . . . . . . . . . # . . . . . . #"},
+    {"+ . ### . # . ############################### . # . ##### . ########### . #"},
+    {"+ . . . . # . # . . . . . . . . . . . . . . . . # . . . . . . . . . . . . #"},
+    {"+ . ### . # . # . ########################### . # . ################### . #"},
+    {"# . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . #"},
+    {"#############################+++++++++#####################################"} };
+    
+    char** myMap = new char* [19];
+    for (int i = 0; i < 19; i++)
     {
-        if (myMap[i][j] == typeKey[WALL]) // if it's a '#' meaning wall
-            _map[i][j] = WALL;
-
-        else if (myMap[i][j] == '+')
+        myMap[i] = new char[76];
+        strcpy(myMap[i], staticMap[i]);
+    }
+    
+    _map = new tileType * [_height];
+    for (int i = 0; i < _height; i++)
+    {
+        _map[i] = new tileType[_width];
+        for (int j = 0; j < _width; j++)
         {
-            _map[i][j] = TUNNEL;
-        }
-        else
-        {
-            if (j % 2 == 0) //breadcrumbs appear in the even coloumns, for aesthetic purposes :)
+            if (myMap[i][j] == typeKey[WALL]) // if it's a '#' meaning wall
+                _map[i][j] = WALL;
+    
+            else if (myMap[i][j] == '+')
             {
-                _map[i][j] = BREADCRUMB;
-                _totalBC++;
+                _map[i][j] = TUNNEL;
             }
             else
-                _map[i][j] = EMPTY;
+            {
+                if (j % 2 == 0) //breadcrumbs appear in the even coloumns, for aesthetic purposes :)
+                {
+                    _map[i][j] = BREADCRUMB;
+                    _totalBC++;
+                }
+                else
+                    _map[i][j] = EMPTY;
+            }
         }
     }
-}
-setCorners();
+    setCorners();
 }
 
 Map::~Map()
 {
-    if (_width != -1) //otherwise this would mean the program did not make a dynaic array for map.
-    {
         for (int i = 0; i < _height; i++)
         {
             delete[] _map[i];
         }
         delete[] _map;
-    }
 }
 
 void Map::setColourfulMap(int flag)
@@ -91,6 +89,7 @@ Map::tileType Map::getTileType(int _x, int _y) const
     return _map[_y][_x];
 }
 
+//prints the entire board - only happens once during a game
 void Map::print() const
 {
     for (int i = 0; i < _height; i++)
@@ -104,6 +103,7 @@ void Map::print() const
     }
 }
 
+//sets colour according to the tileType (if colourful game!)
 void Map::setTileColour(int i, int j) const
 { 
     if (_colourfullMap && _map[i][j] == WALL)
@@ -116,6 +116,7 @@ void Map::setTileColour(int i, int j) const
     }
 }
 
+//prints a given coordinate according to the board
 void Map::printTile(Position pos) const
 {
     int x = pos.x;
@@ -125,7 +126,9 @@ void Map::printTile(Position pos) const
     cout << typeKey[_map[y][x]];
 }
 
-Position Map::getCorner(int index) const
+//returns corner by index
+// 0-topleft, 1-topright, 2-botleft, 3-botright
+Position Map::getCorner(int index) const 
 {
     return _corners[index];
 }
@@ -144,7 +147,7 @@ int Map::getHeight() const
     return _height; 
 }
 
-
+//sets corners according to the constructed map
 void Map::setCorners()
 {
     //(coloumn, row)

@@ -20,17 +20,22 @@ public:
     const char typeKey[4] = { ' ', '#', '.', ' '};
 
 public:
+    //c'tor and d'tor
     Map();//char** newMap, int width, int height);
     ~Map();
+
+    //printers
     void print() const;
     void printTile(Position pos) const;
 
+    //setters
     void       setColourfulMap(int flag);
     void       setTileColour(int i, int j) const;
     void       setTile(Position pos, tileType newtype);
-    tileType   getTileType(Position pos) const; //check how to return the enum and not index
-    tileType   getTileType(int _x, int _y) const;
 
+    //getters
+    tileType   getTileType(Position pos) const;
+    tileType   getTileType(int _x, int _y) const;
     Position   getCorner(int index) const;
     int        getMaxBC() const;
     int        getWidth() const;
@@ -39,12 +44,13 @@ public:
 private:
     int         _width;  //coloumns --->
     int         _height; //rows    |
-                        //         v
+                         //        v
     tileType**  _map;
     int         _totalBC;
     Position    _corners[4];
     int         _colourfullMap;
 
+    //private setter
     void        setCorners();
 };
 

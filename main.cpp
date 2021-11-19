@@ -10,8 +10,6 @@ int main()
 		Game game;
 		game.set(play);
 
-		//destroy curent game
-
 	} while (play);
 
 

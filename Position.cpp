@@ -1,23 +1,20 @@
 #include "Position.h"
 
+//set x and y 
 void Position::setXY(int _x, int _y)
 {
 	x = _x;
 	y = _y;
 }
 
+//goes to (x,y) coordinate and pronts a given char there
 void Position::draw(char ch) const
 {
 	gotoxy(x, y);
 	cout << ch << endl;
 }
 
-void Position::randUpdate()  
-{
-	int dir = rand() % 4; //--> 0, 1, 2, 3
-	update((compass)dir);
-}
-
+//receives direction and moves (x,y) coordinate by it
 void Position::update(compass direction)
 {
 	switch (direction) {
@@ -38,18 +35,11 @@ void Position::update(compass direction)
 	}
 }
 
+//function for visual movement by a given direction 
 void Position::move(Colour colour, char c, compass direction)
 {
 	draw(' ');
 	update(direction);
-	setTextColour(colour);
-	draw(c);
-}
-
-void Position::moveRand(Colour colour, char c)
-{
-	draw(' ');
-	randUpdate();
 	setTextColour(colour);
 	draw(c);
 }
