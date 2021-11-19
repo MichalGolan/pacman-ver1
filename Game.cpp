@@ -75,11 +75,11 @@ int Game::askForColours()
 		cout << "Would you like to play with colours?" << endl << "Y - Yes / N - No" << endl;
 		cin >> c;
 		lower(c);
+		system("cls");
 		if (c != 'y' && c != 'n')
 		{
 			printByIndex(INVALID);
 		}
-		system("cls");
 	} while (c != 'y' && c != 'n');
 
 	if (c == 'y')
@@ -120,7 +120,7 @@ void Game::run()
 
 		handlePacmanMove();
 		_pacman.move();
-		Sleep(500); 
+		Sleep(300); 
 
 		endGame(play);
 
