@@ -146,6 +146,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Pacman.cpp" />
     <ClCompile Include="Position.cpp" />
+    <ClCompile Include="QItem.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Map.h" />
@@ -155,6 +156,7 @@
     <ClInclude Include="Ghost.h" />
     <ClInclude Include="Pacman.h" />
     <ClInclude Include="Position.h" />
+    <ClInclude Include="QItem.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

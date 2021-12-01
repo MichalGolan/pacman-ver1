@@ -47,6 +47,7 @@ private:
 	void     handleGhostMove();
 	int      pacmanGhostMeet();
 	void     resetCreatures();
+	void     smartGhostMove();
 
 	//gameplay
 	void pause(int& play);

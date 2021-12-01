@@ -284,6 +284,22 @@ void Game::handleGhostMove()
 	}
 }
 
+void Game::smartGhostMove()
+{
+	Position currPacman = _pacman.getLocation();
+
+	for (Ghost& g : _ghosts)
+	{
+		Position Ghostloc = g.getLocation();
+
+		Position::compass newDir = _map.getBestRoute(currPacman, Ghostloc);
+		g.setDirection(newDir);
+
+		g.move();
+		_map.printTile(Ghostloc);
+	}
+}
+
 //checks if pacman and ghost collided
 int Game::pacmanGhostMeet()
 {
@@ -401,5 +417,4 @@ void Game::printByIndex(int index) const
 		break;
 	}
 }
-
 

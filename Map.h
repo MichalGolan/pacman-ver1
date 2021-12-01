@@ -2,7 +2,8 @@
 	#define _MAP_H
 
 #include <iostream>
-#include "Position.h"
+#include <queue>
+#include "QItem.h"
 
 using namespace std;
 
@@ -21,7 +22,7 @@ public:
 
 public:
     //c'tor and d'tor
-    Map();//char** newMap, int width, int height);
+    Map();
     ~Map();
 
     //printers
@@ -41,17 +42,22 @@ public:
     int        getWidth() const;
     int        getHeight() const;
 
-private:
-    int         _width;  //coloumns --->
-    int         _height; //rows    |
-                         //        v
-    tileType**  _map;
-    int         _totalBC;
-    Position    _corners[4];
-    int         _colourfullMap;
+    int               shortestPathLen(Position dest, Position src) const;
+    Position::compass getBestRoute(Position &dest, Position &src) const;
 
-    //private setter
+private:
+    int                 _width;  //coloumns --->
+    int                 _height; //rows    |
+                         //        v
+    mutable bool**      _visited;
+    tileType**          _map;
+    int                 _totalBC;
+    Position            _corners[4];
+    int                 _colourfullMap;
+
+    //private setters
     void        setCorners();
+    void        setVisited() const;
 };
 
 
