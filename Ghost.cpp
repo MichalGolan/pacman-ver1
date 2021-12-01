@@ -1,16 +1,16 @@
 #include "Ghost.h"
 
-Ghost::Ghost() : _location({ 1,1 }), _direction(Position::LEFT), _figure('$'), _colour(WHITE) {}
+Ghost::Ghost() : Creature({ 1,1 }, Position::LEFT, '$', WHITE) {}
 
-Ghost::Ghost(Position location, Position::compass direction, char figure, Colour colour)
+Ghost::Ghost(Position location, Position::compass direction, char figure, Colour colour) : Creature(location, direction, figure, colour)
 {
-	setLocation(location);
+/*	setLocation(location);
 	setDirection(direction);
 	setFigure(figure);
-	setColour(colour);
+	setColour(colour);*/ //mimi
 }
 
-Position  Ghost::getLocation() const
+/*Position  Ghost::getLocation() const
 {
 	return _location;
 }
@@ -35,7 +35,7 @@ void Ghost::setDirection(Position::compass dir) {
 void Ghost::setLocation(Position loc)
 {
 	_location = loc;
-}
+}*/ // mimi
 
 //changes ghost's direction so it goes back and forth
 void Ghost::switchDirection()
@@ -53,8 +53,8 @@ void Ghost::switchDirection()
 }
 
 //calls move for Position of ghost
-void Ghost::move()
+/*void Ghost::move()
 {
 	_location.move(_colour, _figure, _direction);
-}
+}*/ //mimi
 

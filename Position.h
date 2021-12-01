@@ -26,6 +26,7 @@ private:
 	int y;
 
 	friend class Game;
+	friend class Creature;
 	friend class Map;
 };
 

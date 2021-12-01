@@ -4,6 +4,8 @@
 Game::Game() : _breadcrumbs(0), _lives(3), _colourfulGame(0)
 {
 	initGhosts();
+	setArrowKeys("wxads"); // mimi
+
 }
 
 //if the player chose a colourful game will handle accordingly
@@ -108,7 +110,7 @@ void Game::run()
 			}
 			else if (validMove(key))
 			{
-				_pacman.setDirection(_pacman.getDirectionKey(key)); // extract the direction by 'key', and setting new direction accordingly
+				_pacman.setDirection(getDirectionKey(key)); // extract the direction by 'key', and setting new direction accordingly //mimi
 			}
 		}
 		if (timer % 2 == 0) //to make the ghost move 1/2 speed of pacman
@@ -133,7 +135,7 @@ void Game::run()
 int Game::validMove(char& key)
 {
 	lower(key);
-	if (_pacman.getDirectionKey(key) != -1)
+	if (getDirectionKey(key) != -1) //mimi
 	{
 		return 1;
 	}
@@ -418,3 +420,21 @@ void Game::printByIndex(int index) const
 	}
 }
 
+//returns the direction by given key according to our arrow keys
+int Game::getDirectionKey(char key) const 
+{
+	for (int i = 0; i < 5; i++)
+	{
+		if (key == _arrowKeys[i])
+			return i;
+	}
+	return -1;
+} //mimi
+
+void Game::setArrowKeys(const char* keys) { // "waxd s"
+	_arrowKeys[0] = keys[0];
+	_arrowKeys[1] = keys[1];
+	_arrowKeys[2] = keys[2];
+	_arrowKeys[3] = keys[3];
+	_arrowKeys[4] = keys[4];
+} // mimi
