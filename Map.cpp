@@ -36,7 +36,7 @@ Map::Map() : _width(defWidth), _height(defHeight), _totalBC(0), _colourfullMap(0
     _map = new tileType * [_height];
     for (int i = 0; i < _height; i++)
     {
-        _visited = new bool* [_width];
+        _visited[i] = new bool [_width];
         _map[i] = new tileType[_width];
         for (int j = 0; j < _width; j++)
         {
@@ -206,7 +206,10 @@ int Map::shortestPathLen(Position dest, Position src) const
 
 
             if (dest == Position(cCol, cRow)) // if we have reached our destination, return the path
+            {
+                setVisited();
                 return curr.getDistance();
+            }
 
             if (cRow - 1 >= 0 && !_visited[cRow - 1][cCol]) // checking for upwards if not outside borders & not visited 
             {
@@ -251,7 +254,7 @@ Position::compass Map::getBestRoute(Position &dest, Position &src) const
         vector<int> paths;
         vector<Position::compass> routes;
         
-        int upPath, downPath, leftPath, rightPath, min;
+        int upPath, downPath, leftPath, rightPath, min = currBestPath;
 
         Position::compass bestDir;
 
@@ -283,7 +286,7 @@ Position::compass Map::getBestRoute(Position &dest, Position &src) const
 
         for (int i = 0; i < paths.size(); ++i) // find the path which is better than the current best (minimal)
         {
-            if (paths.at(i) < currBestPath)
+            if (paths.at(i) < min)
             {
                 bestDir = routes.at(i);
                 min = paths.at(i);

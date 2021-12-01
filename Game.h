@@ -62,10 +62,10 @@ private:
 	void initGhosts();
 
 	//getters
-	int      getDirectionKey(char key) const; // mimi
+	int      getDirectionKey(char key) const;
 
 private:
-	void setArrowKeys(const char* keys);  // "waxd s" //mimi
+	void setArrowKeys(const char* keys);  // "waxd s"
 
 private: //data members
 	Map    _map;
@@ -74,7 +74,7 @@ private: //data members
 	int    _breadcrumbs;
 	int    _lives;
 	int    _colourfulGame;
-	char   _arrowKeys[5]; //mimi
+	char   _arrowKeys[5];
 
 };
 

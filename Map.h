@@ -4,6 +4,7 @@
 #include <iostream>
 #include <queue>
 #include "QItem.h"
+#include "Position.h"
 
 using namespace std;
 
