@@ -45,8 +45,10 @@ private:
 	int      notAPath() const;
 	void     handlePacmanMove();
 	void     handleGhostMove();
-	int      pacmanGhostMeet();
 	void     resetCreatures();
+
+	int      pacmanGhostMeet();
+
 
 	//gameplay
 	void pause(int& play);
@@ -58,6 +60,12 @@ private:
 	//setters
 	void initGhosts();
 
+	//getters
+	int      getDirectionKey(char key) const; // mimi
+
+private:
+	void setArrowKeys(const char* keys);  // "waxd s" //mimi
+
 private: //data members
 	Map    _map;
 	Pacman _pacman;
@@ -65,6 +73,8 @@ private: //data members
 	int    _breadcrumbs;
 	int    _lives;
 	int    _colourfulGame;
+	char   _arrowKeys[5]; //mimi
+
 };
 
 #endif
