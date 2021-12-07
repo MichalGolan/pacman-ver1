@@ -8,11 +8,11 @@ class Ghost : public Creature{
 
 public:
 	//c'tors
-	Ghost();
-	Ghost(Position location, Position::compass direction, char figure, Colour colour = WHITE);
+	Ghost(Position location, char figure = '$', Position::compass direction = Position::LEFT) : Creature(figure, direction) {_location = location;}
 
-
-	void switchDirection();
+	void     handleGhostMove();
+	void     smartGhostMove(const Position& pacmanPosition);
+	void	 switchDirection();
 };
 
 

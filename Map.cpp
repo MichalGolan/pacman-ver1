@@ -240,7 +240,7 @@ int Map::shortestPathLen(Position dest, Position src) const
     return -1; // if not found a path!
 }
 
-Position::compass Map::getBestRoute(Position &dest, Position &src) const
+Position::compass Map::getBestRoute(const Position &dest, const Position &src) const
 {
     int currBestPath = shortestPathLen(dest, src);
 
@@ -297,3 +297,24 @@ Position::compass Map::getBestRoute(Position &dest, Position &src) const
     }
 }
 
+//checks for a tunnel on the other side
+Position Map::isATunnel(const Position& pos) const
+{
+    if (pos.y == 0 && getTileType(pos.x, getHeight() - 1) == Map::TUNNEL)
+    {
+        return { pos.x, getHeight() - 1 };
+    }
+    if (pos.y == getHeight() - 1 && getTileType(pos.x, 0) == Map::TUNNEL)
+    {
+        return  { pos.x, 0 };
+    }
+    if (pos.x == 1 && getTileType(getWidth() - 2, pos.y) == Map::TUNNEL)
+    {
+        return { getWidth() - 3, pos.y };
+    }
+    if (pos.x == getWidth() - 3 && getTileType(0, pos.y) == Map::TUNNEL)
+    {
+        return { 1, pos.y };
+    }
+    return pos;
+}

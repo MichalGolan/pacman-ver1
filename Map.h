@@ -44,7 +44,9 @@ public:
     int        getHeight() const;
 
     int               shortestPathLen(Position dest, Position src) const;
-    Position::compass getBestRoute(Position &dest, Position &src) const;
+    Position::compass getBestRoute(const Position &dest, const Position &src) const;
+    Position isATunnel(const Position& pos) const;
+
 
 private:
     int                 _width;  //coloumns --->

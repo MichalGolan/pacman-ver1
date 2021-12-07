@@ -1,9 +1,29 @@
 #include "Ghost.h"
 
-Ghost::Ghost() : Creature({ 1,1 }, Position::LEFT, '$', WHITE) {}
+//responsible for visual and logical ghost movement
+void Ghost::handleGhostMove()
+{
+	Position Ghostloc = _location;
+	Position NextGhostloc = _location;
 
-Ghost::Ghost(Position location, Position::compass direction, char figure, Colour colour) : Creature(location, direction, figure, colour)
-{}
+	NextGhostloc.update(_direction);
+
+	if (isNextLocationWallorTunnel(_direction, NextGhostloc))
+	{
+		switchDirection();
+	}
+	move();
+	_map->printTile(Ghostloc);
+}
+
+void Ghost::smartGhostMove(const Position& pacmanPosition)
+{
+	Position::compass newDir = _map->getBestRoute(pacmanPosition, _location);
+	setDirection(newDir);
+	
+	move();
+	_map->printTile(_location);
+}
 
 
 //changes ghost's direction so it goes back and forth

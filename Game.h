@@ -1,12 +1,14 @@
 #ifndef _GAME_H
 	#define _GAME_H
 
+using namespace std;
+
 #include <iostream>
 #include "Map.h"
 #include "Pacman.h"
 #include "Ghost.h"
+#include <vector>
 
-using namespace std;
 
 //gameplay keys consts
 const int ESC = 27;
@@ -38,17 +40,12 @@ private:
 	void run();
 
 	//creatures movement
-	int      validMove(char& key);
-	int      isNextLocationWallorTunnel(Position::compass dir, Position nextLocation) const;
-	void     handleTunnel(Position pos);
-	Position isATunnel(Position pos) const;
-	int      notAPath() const;
-	void     handlePacmanMove();
-	void     handleGhostMove();
-	void     resetCreatures();
-	void     smartGhostMove();
+	int      validMove(char& key); //Game
+	void     resetCreatures();// --------------------------------------------> seperate to pacman restart and ghost restart 
+//-------------------------------------------------------------------------> and a virtual reset in creature
 
-	int      pacmanGhostMeet();
+
+	void     pacmanGhostMeet(); //Game
 
 
 	//gameplay
@@ -68,13 +65,12 @@ private:
 	void setArrowKeys(const char* keys);  // "waxd s"
 
 private: //data members
-	Map    _map;
-	Pacman _pacman;
-	Ghost  _ghosts[2];
-	int    _breadcrumbs;
-	int    _lives;
-	int    _colourfulGame;
-	char   _arrowKeys[5];
+	Map				 _map;
+	Pacman			 _pacman;
+	vector<Ghost>	 _ghosts;
+	int				 _lives;
+	int				 _colourfulGame;
+	char			 _arrowKeys[5];
 
 };
 

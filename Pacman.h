@@ -8,8 +8,13 @@ class Pacman : public Creature{
 
 public:
 	//c'tor
-	Pacman(Position location = { 2,1 },  Position::compass direction = Position::STAY, char figure = '@', Colour colour = WHITE);
+	Pacman(Position::compass direction = Position::STAY, char figure = '@') : Creature(figure, direction), _breadcrumbs(0) {}
+	void handlePacmanMove();
+	void handleTunnel(const Position& pos);
 
+
+private:
+	int    _breadcrumbs;
 };
 
 

@@ -8,7 +8,7 @@
 class Creature {
 public:
 	//c'tor
-	Creature(Position location, Position::compass direction, char figure, Colour colour);
+	Creature(char figure, Position::compass direction);
 
 	//setters
 	void setColour(Colour c);
@@ -31,6 +31,7 @@ public:
 	int      notAPath() const;
 	void     handlePacmanMove();
 	void     handleGhostMove();
+	int      isNextLocationWallorTunnel(Position::compass dir, Position nextLocation) const;
 
 
 

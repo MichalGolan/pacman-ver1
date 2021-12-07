@@ -1,11 +1,9 @@
 #include "Creature.h"
 
-Creature::Creature(Position location, Position::compass direction, char figure, Colour colour) 
+Creature::Creature(char figure, Position::compass direction) : _location({ 2,1 }), _colour(WHITE)
 {
-	setLocation(location);
 	setDirection(direction);
 	setFigure(figure);
-	setColour(colour);
 }
 
 void Creature::setColour(Colour c) {
@@ -46,4 +44,21 @@ Position Creature::getLocation() const
 Position::compass Creature::getDirection() const
 {
 	return _direction;
+}
+
+// this function checks if next location is a wall or a tunnel, seperating cases by direction (if up or down, if left or down)
+int Creature::isNextLocationWallorTunnel(Position::compass dir, Position nextLocation) const
+{
+	if (_map->getTileType(nextLocation) == Map::WALL) // a wall
+	{
+		return 1;
+	}
+	else if (_map->getTileType(nextLocation) == Map::TUNNEL) // tunnel
+	{
+		return 2;
+	}
+	else
+	{
+		return 0;
+	}
 }
