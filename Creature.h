@@ -16,13 +16,16 @@ public:
 	void setDirection(int dir);
 	void setDirection(Position::compass dir);
 	void setLocation(Position newLocation);
-	void setMap(Map* map);
+	void setMap(Map& map);
 
 	//getters
 	Position               getLocation() const;
 	Position::compass      getDirection() const;
 
-	void move();
+	void			  move();
+	Position::compass randDirection();
+	virtual void	  step() = 0; 
+	virtual void	  reset() = 0;
 
 	int      validMove(char& key);
 	int      isNextLocationWallorTunnel(Position::compass dir, Position nextLocation) const;

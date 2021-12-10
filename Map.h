@@ -51,12 +51,13 @@ public:
 private:
     int                 _width;  //coloumns --->
     int                 _height; //rows    |
-                         //        v
+                                   //      v
     mutable bool**      _visited;
     tileType**          _map;
-    int                 _totalBC;
-    Position            _corners[4];
-    int                 _colourfullMap;
+    int                 _totalBC, _colourfullMap;
+    Position            _pacmanLocation, _dataLine, _corners[4];
+    vector<Position>    _ghostsLocation;
+
 
     //private setters
     void        setCorners();

@@ -1,6 +1,6 @@
 #include "Creature.h"
 
-Creature::Creature(char figure, Position::compass direction) : _location({ 2,1 }), _colour(WHITE)
+Creature::Creature(char figure, Position::compass direction) : _location({ 2,1 }), _colour(WHITE), _map(nullptr)
 {
 	setDirection(direction);
 	setFigure(figure);
@@ -26,14 +26,23 @@ void Creature::setLocation(Position newLocation) {
 	_location = newLocation;
 }
 
-void Creature::setMap(Map* map)
+void Creature::setMap(Map& map)
 {
-	//_map = *(map);
+	_map = &(map);
 }
+
 //calls for move of Position
 void Creature::move()
 {
 	_location.move(_colour, _figure, _direction);
+}
+
+//return random direction
+Position::compass Creature::randDirection()
+{
+	int dir = rand() % 4 ; //--> 0, 1, 2, 3
+	setDirection(dir);
+	return (Position::compass)dir;
 }
 
 Position Creature::getLocation() const

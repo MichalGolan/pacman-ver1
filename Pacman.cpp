@@ -2,7 +2,7 @@
 
 // this function checks what is the next move according to: if a wall, a breadcrumb, a tunnel or a ghost. 
 // it considers directions
-void Pacman::handlePacmanMove()
+void Pacman::step()
 {
 	Position nextpos = _location;
 	int wallorTunnel = isNextLocationWallorTunnel(_direction, nextpos);
@@ -20,6 +20,14 @@ void Pacman::handlePacmanMove()
 		_map->setTile(nextpos, Map::EMPTY);
 		_breadcrumbs++;
 	}
+}
+
+//reset to initial location
+void Pacman::reset()
+{
+	_map->printTile(_location);
+	setLocation(_map->getCorner(0));
+	setDirection(Position::STAY);
 }
 
 //handling the movement for a tunnel

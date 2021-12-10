@@ -116,16 +116,16 @@ void Game::run()
 		{
 			for (auto g = _ghosts.begin(); g != _ghosts.end(); g++)
 			{
-				g->handleGhostMove();
+				g->step();
 			}
 			timer = 0;
 		}
 		timer++;
 
-		_pacman.handlePacmanMove();
+		_pacman.step();
 		printByIndex(DATALINE);
 		pacmanGhostMeet();
-		_pacman.move();
+		_pacman.move(); // -------------> check later maybe to move this call into _pacman.step()
 		Sleep(300); 
 
 		endGame(play);
@@ -139,7 +139,7 @@ void Game::run()
 int Game::validMove(char& key)
 {
 	lower(key);
-	if (getDirectionKey(key) != -1) //mimi
+	if (getDirectionKey(key) != -1) 
 	{
 		return 1;
 	}
@@ -148,31 +148,31 @@ int Game::validMove(char& key)
 
 
 //puts creatures back in their starting locations
-void Game::resetCreatures() // --------------------------------------------> seperate to pacman reset and ghost reset 
-//-------------------------------------------------------------------------> and a virtual reset in creature
+void Game::resetCreatures() 
 {
-	_map.printTile(_pacman.getLocation());
-	_map.printTile(_ghosts.at(0).getLocation());
-	_map.printTile(_ghosts.at(1).getLocation());
-
-	_pacman.setLocation(_map.getCorner(0));
-	_ghosts.at(0).setLocation(_map.getCorner(1));
-	_ghosts.at(1).setLocation(_map.getCorner(2));
+	_pacman.reset();
+	for (auto g = _ghosts.begin(); g != _ghosts.end(); g++)
+	{
+		g->reset();
+	}
 	
-	_pacman.setDirection(Position::STAY);
 }
-
-
 
 //checks if pacman and ghost collided
 void Game::pacmanGhostMeet()
 {
-	if ((_pacman.getLocation() == _ghosts.at(0).getLocation()) || (_pacman.getLocation() == _ghosts.at(1).getLocation()))// check if pacman and ghost collide 
+	int flag = 1;
+	for (auto g = _ghosts.begin()  ;  flag && g != _ghosts.end()  ;   g++)
 	{
-		_lives--;
-		resetCreatures(); // ---- this function eill call for a restart function for each creature
-		printByIndex(DATALINE);
+		if (_pacman.getLocation() == g->getLocation())
+		{
+			_lives--;
+			resetCreatures(); // ---- this function eill call for a restart function for each creature
+			printByIndex(DATALINE);
+			flag = 0;
+		}
 	}
+	
 }
 
 //pauses the game

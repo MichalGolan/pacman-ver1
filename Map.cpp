@@ -45,19 +45,34 @@ Map::Map() : _width(defWidth), _height(defHeight), _totalBC(0), _colourfullMap(0
                 _map[i][j] = WALL;
             }
     
-            else if (myMap[i][j] == '+')
+            else if (myMap[i][j] == ' ' || myMap[i][j] == '@' || myMap[i][j] == '$')
             {
-                _map[i][j] = TUNNEL;
-            }
-            else
-            {
-                if (j % 2 == 0) //breadcrumbs appear in the even coloumns, for aesthetic purposes :)
+                if (isBorders()) // --------------> check if space on the border of the board
+                {
+                    _map[i][j] = TUNNEL;
+                }
+                else
                 {
                     _map[i][j] = BREADCRUMB;
                     _totalBC++;
+                    if (myMap[i][j] == '@')
+                    {
+                        _pacmanLocation.setXY(j,i);
+                    }
+                    else if (myMap[i][j] == '$')
+                    {
+                        _ghostsLocation.push_back(Position(j, i));
+                    }
                 }
-                else
-                    _map[i][j] = EMPTY;
+            }
+            else if (myMap[i][j] == '&')
+            {
+                _dataLine.setXY(j, i);
+            }
+
+            else if (myMap[i][j] == '%')
+            {
+                _map[i][j] = EMPTY;
             }
         }
     }

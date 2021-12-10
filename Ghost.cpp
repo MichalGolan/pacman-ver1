@@ -1,7 +1,7 @@
 #include "Ghost.h"
 
 //responsible for visual and logical ghost movement
-void Ghost::handleGhostMove()
+void Ghost::step()
 {
 	Position Ghostloc = _location;
 	Position NextGhostloc = _location;
@@ -14,6 +14,13 @@ void Ghost::handleGhostMove()
 	}
 	move();
 	_map->printTile(Ghostloc);
+}
+
+//reset location to ghost initial location
+void Ghost::reset()
+{
+	_map->printTile(_location);
+	setLocation(_map->getCorner(1));
 }
 
 void Ghost::smartGhostMove(const Position& pacmanPosition)
