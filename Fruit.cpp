@@ -1,8 +1,8 @@
 #include "Fruit.h"
 
-Fruit::Fruit(Position::compass direction, char figure) : Creature(figure, direction), _showTimer(0), _active(0)
+Fruit::Fruit(Position::compass direction, char figure) : Creature(figure, direction), _showTimer(0)
 {
-	_hideTimer = randinRange(20, 10);
+	reset();
 }
 
 void Fruit::randFigure()
@@ -15,13 +15,11 @@ void Fruit::step()
 {
 	if (_hideTimer == 0 && !_active) // still in hide mode
 	{
-		reset(); //--> in here: _showTimer = randinRange(30, 20); + _active =  1; --> 
-				 // if cant find goos random location will not switch to active!
+		activate(); // if cant find good random location will not switch to active!
 	}
 	else if (_showTimer == 0 && _active)
 	{
-		_hideTimer = randinRange(20, 10);
-		_active = 0;
+		reset();
 	}
 	else if(!_active)
 	{
@@ -32,7 +30,7 @@ void Fruit::step()
 		Position nextloc = _location;
 		nextloc.update(_direction);
 
-		if (isNextLocationWallorTunnel(_direction, nextloc)) // nextloc is wall or tunnel
+		if (isNextLocationWallorTunnel(nextloc)) // nextloc is wall or tunnel
 		{
 			//dumb ghost movement --> novice strategy (meaning: fruit will have data member noviceStrategy)
 			//---------------------------------> come back and check this if after doing the novice strategy func
@@ -45,7 +43,28 @@ void Fruit::step()
 	}
 }
 
+// get fruit to its initial state: NOT ACTIVE
 void Fruit::reset()
 {
+	_hideTimer = randinRange(20, 10);
+	_active = 0;
+}
 
+
+//activate fruit 
+void Fruit::activate()
+{
+	int found = 0;
+	Position newPos;
+	newPos.randPos(_map->getHeight(), _map->getWidth());
+	for (int i = 0; i < 10 && !found; i++)
+	{
+		newPos.randPos(_map->getHeight(), _map->getWidth());
+		if (!isNextLocationWallorTunnel(newPos))
+		{
+			found = 1;
+			_showTimer = randinRange(30, 20);
+			_active = 1;
+		}
+	}
 }

@@ -5,7 +5,8 @@
 void Pacman::step()
 {
 	Position nextpos = _location;
-	int wallorTunnel = isNextLocationWallorTunnel(_direction, nextpos);
+	nextpos.update(_direction);
+	int wallorTunnel = isNextLocationWallorTunnel(nextpos);
 
 	if (wallorTunnel == 2)  // tunnel
 	{

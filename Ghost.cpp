@@ -8,7 +8,7 @@ void Ghost::step()
 
 	NextGhostloc.update(_direction);
 
-	if (isNextLocationWallorTunnel(_direction, NextGhostloc))
+	if (isNextLocationWallorTunnel(NextGhostloc))
 	{
 		switchDirection();
 	}

@@ -21,13 +21,14 @@ public:
 	//getters
 	Position               getLocation() const;
 	Position::compass      getDirection() const;
+	char				   getFigure() const;
 
 	void			  move();
 	Position::compass randDirection();
 	virtual void	  step() = 0; 
 	virtual void	  reset() = 0;
 
-	int      isNextLocationWallorTunnel(const Position::compass dir, const Position& nextLocation) const;
+	int      isNextLocationWallorTunnel(const Position& nextLocation) const;
 
 protected:
 	Position              _location;

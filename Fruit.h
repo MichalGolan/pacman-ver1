@@ -10,7 +10,8 @@ public:
 	void		 randFigure();
 	virtual void step();  // slow movment, random direction, 
 	virtual void reset(); // choose random figure and location on map
-	
+	void activate();
+
 	void setAppearTime(int newTime);
 
 	int	 getAppearTime() const;

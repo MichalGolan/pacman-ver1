@@ -7,6 +7,7 @@ using namespace std;
 #include "Map.h"
 #include "Pacman.h"
 #include "Ghost.h"
+#include "Fruit.h"
 #include <vector>
 
 
@@ -44,7 +45,7 @@ private:
 	void     resetCreatures();// --------------------------------------------> seperate to pacman restart and ghost restart 
 //-------------------------------------------------------------------------> and a virtual reset in creature
 
-
+	void	 meetings();
 	void     pacmanGhostMeet(); //Game
 
 
@@ -68,6 +69,7 @@ private: //data members
 	Map				 _map;
 	Pacman			 _pacman;
 	vector<Ghost>	 _ghosts;
+	Fruit			 _fruit;
 	int				 _lives;
 	int				 _colourfulGame;
 	char			 _arrowKeys[5];

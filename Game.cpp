@@ -125,7 +125,7 @@ void Game::run()
 
 		_pacman.step();
 		printByIndex(DATALINE);
-		pacmanGhostMeet();
+		meetings();
 		_pacman.move(); // -------------> check later maybe to move this call into _pacman.step()
 		Sleep(300); 
 
@@ -156,7 +156,24 @@ void Game::resetCreatures()
 	{
 		g->reset();
 	}
+	_fruit.reset();
 	
+}
+
+void Game::meetings()
+{
+	pacmanGhostMeet();
+	if(_pacman.handleFruitMeet(_fruit.getLocation(), _fruit.getFigure()))
+	{
+		_fruit.reset();
+	}
+	for (auto& g : _ghosts)
+	{
+		if (g.getLocation() == _fruit.getLocation())
+		{
+			_fruit.reset();
+		}
+	}
 }
 
 //checks if pacman and ghost collided
@@ -208,9 +225,9 @@ void Game::pause(int & play)
 void Game::endGame(int& play)
 {
 	char c;
-	if (_breadcrumbs == _map.getMaxBC() || _lives == 0) // all breadcrumbs got eaten --> win game
+	if (_pacman.getBCscore() == _map.getMaxBC() || _lives == 0) // all breadcrumbs got eaten --> win game
 	{
-		if (_breadcrumbs == _map.getMaxBC())
+		if (_pacman.getBCscore() == _map.getMaxBC())
 		{
 			play = WIN;
 		}
