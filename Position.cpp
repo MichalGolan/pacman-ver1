@@ -44,12 +44,12 @@ void Position::move(Colour colour, char c, compass direction)
 	draw(c);
 }
 
-int Position::operator==(const Position& other)
+int Position::operator==(const Position& other) const
 {
 	return(x == other.x && y == other.y);
 }
 
-int Position::operator!=(const Position& other)
+int Position::operator!=(const Position& other) const 
 {
 	return(x != other.x || y != other.y);
 }

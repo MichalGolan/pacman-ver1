@@ -276,7 +276,7 @@ void Game::printByIndex(int index) const
 	case DATALINE:
 	{
 		gotoxy(0, _map.getHeight() + 1); // data line
-		cout << "score: " << getBCscore() + getBonusPoints() << " | " << "Lives: " << _lives;
+		cout << "score: " << _pacman.getBCscore() + _pacman.getBonusPoints() << " | " << "Lives: " << _lives;
 		break;
 	}
 	case INVALID:

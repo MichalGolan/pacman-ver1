@@ -29,14 +29,6 @@ public:
 
 	int      validMove(char& key);
 	int      isNextLocationWallorTunnel(Position::compass dir, Position nextLocation) const;
-	void     handleTunnel(Position pos);
-	Position isATunnel(Position pos) const;
-	int      notAPath() const;
-	void     handlePacmanMove();
-	void     handleGhostMove();
-	int      isNextLocationWallorTunnel(Position::compass dir, Position nextLocation) const;
-
-
 
 protected:
 	Position              _location;

@@ -7,15 +7,19 @@ class Fruit : public Creature{
 public:
 	Fruit(Position::compass direction = Position::STAY, char figure = '5');
 
-	void randFigure();
+	void		 randFigure();
 	virtual void step();  // slow movment, random direction, 
 	virtual void reset(); // choose random figure and location on map
+	
+	void setAppearTime(int newTime);
 
-	//handle fruit-pacman meet
-	//handle fruit-ghost meet
+	int	 getAppearTime() const;
+
+
+	void handleFruitGhostMeet();
 
 private:
-	int _appearTime;
+	int		  _appearTime;
 };
 
 

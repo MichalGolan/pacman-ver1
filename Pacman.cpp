@@ -44,3 +44,30 @@ void Pacman::handleTunnel(const Position& pos)
 		setLocation(newPos);
 	}
 }
+
+
+int Pacman::getBCscore() const
+{
+	return _breadcrumbs;
+}
+
+int Pacman::getBonusPoints() const
+{
+	return _bonusPoints;
+}
+
+void Pacman::setBonusPoint(int x)
+{
+	_bonusPoints += x;
+}
+
+int Pacman::handleFruitMeet(const Position& fruitPos, char fruitFigure)
+{
+	int meet = 0;
+	if(_location == fruitPos)
+	{
+		setBonusPoint(int(fruitFigure - '0'));
+		meet = 1;
+	}
+	return meet;
+}

@@ -43,6 +43,11 @@ public:
     int                 getWidth() const;
     int                 getHeight() const;
     vector<Position>    getGhostsLoc() const;
+    int                 getTotalBC() const;
+    Position            getPacmanLocation() const;
+    Position            getDataLine() const;
+
+
 
     int               shortestPathLen(Position dest, Position src) const;
     Position::compass getBestRoute(const Position &dest, const Position &src) const;

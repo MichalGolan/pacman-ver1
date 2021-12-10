@@ -12,10 +12,14 @@ public:
 	virtual void reset();
 	void handleTunnel(const Position& pos);
 
+	int getBCscore() const;
+	int getBonusPoints() const;
 
+	void setBonusPoint(int x);
+	int handleFruitMeet(const Position& fruitPos, char fruitFigure);
 
 private:
-	int    _breadcrumbs,_bonusPoints;
+	int    _breadcrumbs, _bonusPoints;
 };
 
 

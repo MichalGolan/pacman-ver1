@@ -75,3 +75,7 @@ private: //data members
 };
 
 #endif
+//if(_pacman.pacmnfruitmeet(_fruit_locatin))
+{
+	fruit.setcounter(0);
+}

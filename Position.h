@@ -18,8 +18,8 @@ public:
 	void move(Colour colour, char c, compass direction);
 	void gotoPos();
 
-	int  operator==(const Position& other);
-	int  operator!=(const Position& other);
+	int  operator==(const Position& other) const;
+	int  operator!=(const Position& other) const;
 
 private:
 	int x;

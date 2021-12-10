@@ -175,6 +175,23 @@ vector<Position> Map::getGhostsLoc() const
     return _ghostsLocation;
 }
 
+int Map::getTotalBC() const
+{
+    return _totalBC;
+}
+
+Position Map::getPacmanLocation() const
+{
+    return _pacmanLocation;
+}
+
+Position Map::getDataLine() const
+{
+    return _dataLine;
+}
+
+
+
 //sets corners according to the constructed map
 void Map::setCorners()
 {
