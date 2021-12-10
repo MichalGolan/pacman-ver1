@@ -17,5 +17,6 @@ using namespace std;
 void gotoxy(int x, int y);
 void setTextColour(Colour);
 void lower(char& ch);
+int  randinRange(int topRange, int botRange = 0);
 
 #endif

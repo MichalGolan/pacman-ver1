@@ -27,8 +27,7 @@ public:
 	virtual void	  step() = 0; 
 	virtual void	  reset() = 0;
 
-	int      validMove(char& key);
-	int      isNextLocationWallorTunnel(Position::compass dir, Position nextLocation) const;
+	int      isNextLocationWallorTunnel(const Position::compass dir, const Position& nextLocation) const;
 
 protected:
 	Position              _location;

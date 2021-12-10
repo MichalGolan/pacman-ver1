@@ -19,7 +19,8 @@ public:
 	void handleFruitGhostMeet();
 
 private:
-	int		  _appearTime;
+	int _showTimer, _hideTimer, _active;
+	//NoviceStrategy strategy;
 };
 
 

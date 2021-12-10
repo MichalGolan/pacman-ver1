@@ -58,3 +58,11 @@ void Position::gotoPos()
 {
 	gotoxy(x, y);
 }
+
+Position Position::randPos(int bottom, int right)
+{
+	Position rand;
+	rand.x = randinRange(right);
+	rand.y = randinRange(bottom);
+	return rand;
+}
