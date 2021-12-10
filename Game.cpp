@@ -233,7 +233,7 @@ Position Game::isATunnel(Position pos) const
 	{
 		return { _map.getWidth() - 3, pos.y };
 	}	
-	if (pos.x ==  _map.getWidth() - 3 & _map.getTileType(0 , pos.y) == Map::TUNNEL)
+	if (pos.x ==  _map.getWidth() - 3 && _map.getTileType(0 , pos.y) == Map::TUNNEL)
 	{
 		return { 1, pos.y };
 	}
