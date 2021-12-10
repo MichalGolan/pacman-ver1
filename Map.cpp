@@ -36,7 +36,7 @@ Map::Map() : _width(defWidth), _height(defHeight), _totalBC(0), _colourfullMap(0
     _map = new tileType * [_height];
     for (int i = 0; i < _height; i++)
     {
-        _visited = new bool* [_width];
+        _visited[i] = new bool [_width];
         _map[i] = new tileType[_width];
         for (int j = 0; j < _width; j++)
         {
@@ -45,19 +45,34 @@ Map::Map() : _width(defWidth), _height(defHeight), _totalBC(0), _colourfullMap(0
                 _map[i][j] = WALL;
             }
     
-            else if (myMap[i][j] == '+')
+            else if (myMap[i][j] == ' ' || myMap[i][j] == '@' || myMap[i][j] == '$')
             {
-                _map[i][j] = TUNNEL;
-            }
-            else
-            {
-                if (j % 2 == 0) //breadcrumbs appear in the even coloumns, for aesthetic purposes :)
+                if (isBorders()) // --------------> check if space on the border of the board
+                {
+                    _map[i][j] = TUNNEL;
+                }
+                else
                 {
                     _map[i][j] = BREADCRUMB;
                     _totalBC++;
+                    if (myMap[i][j] == '@')
+                    {
+                        _pacmanLocation.setXY(j,i);
+                    }
+                    else if (myMap[i][j] == '$')
+                    {
+                        _ghostsLocation.push_back(Position(j, i));
+                    }
                 }
-                else
-                    _map[i][j] = EMPTY;
+            }
+            else if (myMap[i][j] == '&')
+            {
+                _dataLine.setXY(j, i);
+            }
+
+            else if (myMap[i][j] == '%')
+            {
+                _map[i][j] = EMPTY;
             }
         }
     }
@@ -155,6 +170,11 @@ int Map::getHeight() const
     return _height; 
 }
 
+vector<Position> Map::getGhostsLoc() const
+{
+    return _ghostsLocation;
+}
+
 //sets corners according to the constructed map
 void Map::setCorners()
 {
@@ -206,7 +226,10 @@ int Map::shortestPathLen(Position dest, Position src) const
 
 
             if (dest == Position(cCol, cRow)) // if we have reached our destination, return the path
+            {
+                setVisited();
                 return curr.getDistance();
+            }
 
             if (cRow - 1 >= 0 && !_visited[cRow - 1][cCol]) // checking for upwards if not outside borders & not visited 
             {
@@ -237,7 +260,7 @@ int Map::shortestPathLen(Position dest, Position src) const
     return -1; // if not found a path!
 }
 
-Position::compass Map::getBestRoute(Position &dest, Position &src) const
+Position::compass Map::getBestRoute(const Position &dest, const Position &src) const
 {
     int currBestPath = shortestPathLen(dest, src);
 
@@ -251,7 +274,7 @@ Position::compass Map::getBestRoute(Position &dest, Position &src) const
         vector<int> paths;
         vector<Position::compass> routes;
         
-        int upPath, downPath, leftPath, rightPath, min;
+        int upPath, downPath, leftPath, rightPath, min = currBestPath;
 
         Position::compass bestDir;
 
@@ -283,7 +306,7 @@ Position::compass Map::getBestRoute(Position &dest, Position &src) const
 
         for (int i = 0; i < paths.size(); ++i) // find the path which is better than the current best (minimal)
         {
-            if (paths.at(i) < currBestPath)
+            if (paths.at(i) < min)
             {
                 bestDir = routes.at(i);
                 min = paths.at(i);
@@ -294,3 +317,24 @@ Position::compass Map::getBestRoute(Position &dest, Position &src) const
     }
 }
 
+//checks for a tunnel on the other side
+Position Map::isATunnel(const Position& pos) const
+{
+    if (pos.y == 0 && getTileType(pos.x, getHeight() - 1) == Map::TUNNEL)
+    {
+        return { pos.x, getHeight() - 1 };
+    }
+    if (pos.y == getHeight() - 1 && getTileType(pos.x, 0) == Map::TUNNEL)
+    {
+        return  { pos.x, 0 };
+    }
+    if (pos.x == 1 && getTileType(getWidth() - 2, pos.y) == Map::TUNNEL)
+    {
+        return { getWidth() - 3, pos.y };
+    }
+    if (pos.x == getWidth() - 3 && getTileType(0, pos.y) == Map::TUNNEL)
+    {
+        return { 1, pos.y };
+    }
+    return pos;
+}

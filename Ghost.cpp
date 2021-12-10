@@ -1,41 +1,37 @@
 #include "Ghost.h"
 
-Ghost::Ghost() : Creature({ 1,1 }, Position::LEFT, '$', WHITE) {}
-
-Ghost::Ghost(Position location, Position::compass direction, char figure, Colour colour) : Creature(location, direction, figure, colour)
+//responsible for visual and logical ghost movement
+void Ghost::step()
 {
-/*	setLocation(location);
-	setDirection(direction);
-	setFigure(figure);
-	setColour(colour);*/ //mimi
+	Position Ghostloc = _location;
+	Position NextGhostloc = _location;
+
+	NextGhostloc.update(_direction);
+
+	if (isNextLocationWallorTunnel(_direction, NextGhostloc))
+	{
+		switchDirection();
+	}
+	move();
+	_map->printTile(Ghostloc);
 }
 
-/*Position  Ghost::getLocation() const
+//reset location to ghost initial location
+void Ghost::reset()
 {
-	return _location;
+	_map->printTile(_location);
+	setLocation(_map->getCorner(1));
 }
 
-Position::compass Ghost::getDirection() const
+void Ghost::smartGhostMove(const Position& pacmanPosition)
 {
-	return _direction;
+	Position::compass newDir = _map->getBestRoute(pacmanPosition, _location);
+	setDirection(newDir);
+	
+	move();
+	_map->printTile(_location);
 }
 
-void Ghost::setColour(Colour c) {
-	_colour = c;
-}
-
-void Ghost::setFigure(const char c) {
-	_figure = c;
-}
-
-void Ghost::setDirection(Position::compass dir) {
-	_direction = dir;
-}
-
-void Ghost::setLocation(Position loc)
-{
-	_location = loc;
-}*/ // mimi
 
 //changes ghost's direction so it goes back and forth
 void Ghost::switchDirection()
@@ -51,10 +47,3 @@ void Ghost::switchDirection()
 	}
 	_direction = (Position::compass)currdir;
 }
-
-//calls move for Position of ghost
-/*void Ghost::move()
-{
-	_location.move(_colour, _figure, _direction);
-}*/ //mimi
-

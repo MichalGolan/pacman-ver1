@@ -88,6 +88,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpplatest</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -140,6 +141,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Creature.cpp" />
+    <ClCompile Include="Fruit.cpp" />
     <ClCompile Include="Map.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="General.cpp" />
@@ -147,10 +149,10 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Pacman.cpp" />
     <ClCompile Include="Position.cpp" />
-    <ClCompile Include="QItem.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Creature.h" />
+    <ClInclude Include="Fruit.h" />
     <ClInclude Include="Map.h" />
     <ClInclude Include="Colour.h" />
     <ClInclude Include="Game.h" />

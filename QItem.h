@@ -1,8 +1,6 @@
 #ifndef _QITEM_H
 	#define _QITEM_H
 
-#include "Position.h"
-
 //class of a Queue item that holds a row+col coordination and its distance from a source 
 //for find shortest path function
 

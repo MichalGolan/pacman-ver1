@@ -4,6 +4,7 @@
 #include <iostream>
 #include <queue>
 #include "QItem.h"
+#include "Position.h"
 
 using namespace std;
 
@@ -35,25 +36,29 @@ public:
     void       setTile(Position pos, tileType newtype);
 
     //getters
-    tileType   getTileType(Position pos) const;
-    tileType   getTileType(int _x, int _y) const;
-    Position   getCorner(int index) const;
-    int        getMaxBC() const;
-    int        getWidth() const;
-    int        getHeight() const;
+    tileType            getTileType(Position pos) const;
+    tileType            getTileType(int _x, int _y) const;
+    Position            getCorner(int index) const;
+    int                 getMaxBC() const;
+    int                 getWidth() const;
+    int                 getHeight() const;
+    vector<Position>    getGhostsLoc() const;
 
     int               shortestPathLen(Position dest, Position src) const;
-    Position::compass getBestRoute(Position &dest, Position &src) const;
+    Position::compass getBestRoute(const Position &dest, const Position &src) const;
+    Position isATunnel(const Position& pos) const;
+
 
 private:
     int                 _width;  //coloumns --->
     int                 _height; //rows    |
-                         //        v
+                                   //      v
     mutable bool**      _visited;
     tileType**          _map;
-    int                 _totalBC;
-    Position            _corners[4];
-    int                 _colourfullMap;
+    int                 _totalBC, _colourfullMap;
+    Position            _pacmanLocation, _dataLine, _corners[4];
+    vector<Position>    _ghostsLocation;
+
 
     //private setters
     void        setCorners();

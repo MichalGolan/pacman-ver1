@@ -1,11 +1,9 @@
 #include "Creature.h"
 
-Creature::Creature(Position location, Position::compass direction, char figure, Colour colour) 
+Creature::Creature(char figure, Position::compass direction) : _location({ 2,1 }), _colour(WHITE), _map(nullptr)
 {
-	setLocation(location);
 	setDirection(direction);
 	setFigure(figure);
-	setColour(colour);
 }
 
 void Creature::setColour(Colour c) {
@@ -28,14 +26,23 @@ void Creature::setLocation(Position newLocation) {
 	_location = newLocation;
 }
 
-void Creature::setMap(Map* map)
+void Creature::setMap(Map& map)
 {
-	//_map = *(map);
+	_map = &(map);
 }
+
 //calls for move of Position
 void Creature::move()
 {
 	_location.move(_colour, _figure, _direction);
+}
+
+//return random direction
+Position::compass Creature::randDirection()
+{
+	int dir = rand() % 4 ; //--> 0, 1, 2, 3
+	setDirection(dir);
+	return (Position::compass)dir;
 }
 
 Position Creature::getLocation() const
@@ -46,4 +53,21 @@ Position Creature::getLocation() const
 Position::compass Creature::getDirection() const
 {
 	return _direction;
+}
+
+// this function checks if next location is a wall or a tunnel, seperating cases by direction (if up or down, if left or down)
+int Creature::isNextLocationWallorTunnel(Position::compass dir, Position nextLocation) const
+{
+	if (_map->getTileType(nextLocation) == Map::WALL) // a wall
+	{
+		return 1;
+	}
+	else if (_map->getTileType(nextLocation) == Map::TUNNEL) // tunnel
+	{
+		return 2;
+	}
+	else
+	{
+		return 0;
+	}
 }

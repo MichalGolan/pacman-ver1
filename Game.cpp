@@ -1,7 +1,7 @@
 ﻿#include"Game.h"
 
 //game's constructor
-Game::Game() : _breadcrumbs(0), _lives(3), _colourfulGame(0)
+Game::Game() : _lives(3), _colourfulGame(0)
 {
 	initGhosts();
 	setArrowKeys("wxads"); // mimi
@@ -14,20 +14,20 @@ void Game::colourIt()
 	if (_colourfulGame)
 	{
 		_pacman.setColour(YELLOW);
-		_ghosts[0].setColour(LIGHTMAGENTA);
-		_ghosts[1].setColour(LIGHTCYAN);
+		for (auto& g : _ghosts)
+		{
+			g.setColour(LIGHTCYAN);
+		}
 		_map.setColourfulMap(_colourfulGame);
 	}
 }
-
 //sets the ghosts of the game
 void Game::initGhosts()
 {	
-	Ghost ghost1(_map.getCorner(1), Position::DOWN, '$');
-	Ghost ghost2(_map.getCorner(2), Position::RIGHT, '$');
-
-	_ghosts[0] = ghost1; 
-	_ghosts[1] = ghost2; 
+	for (auto& gLoc : _map.getGhostsLoc())
+	{
+		_ghosts.push_back(Ghost(gLoc));
+	}
 }
 
 //handling user choice and running or exiting
@@ -115,13 +115,18 @@ void Game::run()
 		}
 		if (timer % 2 == 0) //to make the ghost move 1/2 speed of pacman
 		{
-			handleGhostMove();
+			for (auto g = _ghosts.begin(); g != _ghosts.end(); g++)
+			{
+				g->step();
+			}
 			timer = 0;
 		}
 		timer++;
 
-		handlePacmanMove();
-		_pacman.move();
+		_pacman.step();
+		printByIndex(DATALINE);
+		pacmanGhostMeet();
+		_pacman.move(); // -------------> check later maybe to move this call into _pacman.step()
 		Sleep(300); 
 
 		endGame(play);
@@ -135,177 +140,40 @@ void Game::run()
 int Game::validMove(char& key)
 {
 	lower(key);
-	if (getDirectionKey(key) != -1) //mimi
+	if (getDirectionKey(key) != -1) 
 	{
 		return 1;
 	}
 	return 0;
 }
 
-// this function checks if next location is a wall or a tunnel, seperating cases by direction (if up or down, if left or down)
-int Game::isNextLocationWallorTunnel(Position::compass dir, Position nextLocation) const
-{
-	if ((dir == Position::UP || dir == Position::DOWN)) // direction is up or down
-	{
-		if (_map.getTileType(nextLocation) == Map::WALL) // a wall
-		{
-			return 1;
-		}
-		else if (_map.getTileType(nextLocation) == Map::TUNNEL) // tunnel
-		{
-			return 2;
-		}
-	}
-	nextLocation.update(dir);// getting 2 steps from original location, usefull for left/right movement
-
-	if ((dir == Position::LEFT || dir == Position::RIGHT)) // direction is left or right 
-	{
-		if (_map.getTileType(nextLocation) == Map::WALL) // a wall
-		{
-			return 1;
-		}
-		else if (_map.getTileType(nextLocation) == Map::TUNNEL) // tunnel
-		{
-			return 2;
-		}
-	}
-	return 0;
-}
-
-
-// this function checks what is the next move according to: if a wall, a breadcrumb, a tunnel or a ghost. 
-// it considers directions
-void Game::handlePacmanMove()
-{
-	Position nextpos = _pacman.getLocation();
-	nextpos.update(_pacman.getDirection());
-	int wallorTunnel = isNextLocationWallorTunnel(_pacman.getDirection(), nextpos);
-
-	if (wallorTunnel == 2)  // tunnel
-	{
-		handleTunnel(nextpos); 
-	}
-	else if (wallorTunnel == 1 || notAPath()) //wall or not a path
-	{
-		_pacman.setDirection(Position::STAY);
-	}
-	else if (_map.getTileType(nextpos) == Map::BREADCRUMB) // not a wall --> check if BC
-	{
-		_map.setTile(nextpos, Map::EMPTY);
-		_breadcrumbs++;
-		printByIndex(DATALINE);
-	}
-	if (pacmanGhostMeet())// check if pacman and ghost collide 
-	{
-		_lives--;
-		resetCreatures();
-		printByIndex(DATALINE);
-	}
-}
-
-//handling the movement for a tunnel
-void Game::handleTunnel(Position pos) 
-{
-	Position newPos = isATunnel(pos);
-	if (newPos == pos)
-	{
-		_pacman.setDirection(Position::STAY);
-	}
-	else
-	{
-		_map.printTile(_pacman.getLocation());
-		_pacman.setLocation(newPos);
-	}
-}
-
-//checks for a tunnel on the other side
-Position Game::isATunnel(Position pos) const
-{
-	if (pos.y == 0 && _map.getTileType(pos.x, _map.getHeight() - 1) == Map::TUNNEL) 
-	{
-		return { pos.x, _map.getHeight() - 1};
-	}
-	if (pos.y == _map.getHeight() - 1 && _map.getTileType(pos.x, 0) == Map::TUNNEL)
-	{
-		return  { pos.x, 0 };
-	}
-	if (pos.x == 1 && _map.getTileType(_map.getWidth() - 2, pos.y) == Map::TUNNEL)
-	{
-		return { _map.getWidth() - 3, pos.y };
-	}	
-	if (pos.x ==  _map.getWidth() - 3 && _map.getTileType(0 , pos.y) == Map::TUNNEL)
-	{
-		return { 1, pos.y };
-	}
-	return pos;
-}
 
 //puts creatures back in their starting locations
-void Game::resetCreatures()
+void Game::resetCreatures() 
 {
-	_map.printTile(_pacman.getLocation());
-	_map.printTile(_ghosts[0].getLocation());
-	_map.printTile(_ghosts[1].getLocation());
-
-	_pacman.setLocation(_map.getCorner(0));
-	_ghosts[0].setLocation(_map.getCorner(1));
-	_ghosts[1].setLocation(_map.getCorner(2));
+	_pacman.reset();
+	for (auto g = _ghosts.begin(); g != _ghosts.end(); g++)
+	{
+		g->reset();
+	}
 	
-	_pacman.setDirection(Position::STAY);
-}
-
-// if movement is vertical and location coloumn not even
-// meaning not a legitimate path (#_._#)	
-int Game::notAPath() const
-{
-	Position::compass dir = _pacman.getDirection();
-	
-	if ((dir == Position::UP || dir == Position::DOWN) && _pacman.getLocation().x % 2 != 0) 
-	{
-		return 1;
-	}
-	return 0;
-}
-
-//responsible for visual and logical ghost movement
-void Game::handleGhostMove()
-{
-	for (Ghost& g : _ghosts)
-	{
-		Position Ghostloc = g.getLocation();
-		Position NextGhostloc = g.getLocation();
-
-		NextGhostloc.update(g.getDirection());
-
-		if (isNextLocationWallorTunnel(g.getDirection(), NextGhostloc))
-		{
-			g.switchDirection();
-		}
-		g.move();
-		_map.printTile(Ghostloc);
-	}
-}
-
-void Game::smartGhostMove()
-{
-	Position currPacman = _pacman.getLocation();
-
-	for (Ghost& g : _ghosts)
-	{
-		Position Ghostloc = g.getLocation();
-
-		Position::compass newDir = _map.getBestRoute(currPacman, Ghostloc);
-		g.setDirection(newDir);
-
-		g.move();
-		_map.printTile(Ghostloc);
-	}
 }
 
 //checks if pacman and ghost collided
-int Game::pacmanGhostMeet()
+void Game::pacmanGhostMeet()
 {
-	return ((_pacman.getLocation() ==_ghosts[0].getLocation()) || (_pacman.getLocation()==_ghosts[1].getLocation()));
+	int flag = 1;
+	for (auto g = _ghosts.begin()  ;  flag && g != _ghosts.end()  ;   g++)
+	{
+		if (_pacman.getLocation() == g->getLocation())
+		{
+			_lives--;
+			resetCreatures(); // ---- this function eill call for a restart function for each creature
+			printByIndex(DATALINE);
+			flag = 0;
+		}
+	}
+	
 }
 
 //pauses the game
@@ -408,7 +276,7 @@ void Game::printByIndex(int index) const
 	case DATALINE:
 	{
 		gotoxy(0, _map.getHeight() + 1); // data line
-		cout << "score: " << _breadcrumbs << " | " << "Lives: " << _lives;
+		cout << "score: " << getBCscore() + getBonusPoints() << " | " << "Lives: " << _lives;
 		break;
 	}
 	case INVALID:
@@ -437,4 +305,4 @@ void Game::setArrowKeys(const char* keys) { // "waxd s"
 	_arrowKeys[2] = keys[2];
 	_arrowKeys[3] = keys[3];
 	_arrowKeys[4] = keys[4];
-} // mimi
+} 
