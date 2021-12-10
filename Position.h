@@ -17,6 +17,7 @@ public:
 	void update(compass direction);
 	void move(Colour colour, char c, compass direction);
 	void gotoPos();
+	Position randPos(int bottom, int right);
 
 	int  operator==(const Position& other);
 	int  operator!=(const Position& other);

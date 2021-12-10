@@ -56,7 +56,7 @@ Position::compass Creature::getDirection() const
 }
 
 // this function checks if next location is a wall or a tunnel, seperating cases by direction (if up or down, if left or down)
-int Creature::isNextLocationWallorTunnel(Position::compass dir, Position nextLocation) const
+int Creature::isNextLocationWallorTunnel(const Position::compass dir, const Position& nextLocation) const
 {
 	if (_map->getTileType(nextLocation) == Map::WALL) // a wall
 	{

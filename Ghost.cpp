@@ -22,6 +22,41 @@ void Ghost::reset()
 	_map->printTile(_location);
 	setLocation(_map->getCorner(1));
 }
+/*
+Strategy* strategy;
+
+setStrategy(int choice)
+{
+if(1)
+strategy = new NoviceStrategy();
+if(2)
+strategy = new GoodStrategy();
+if(3)
+strategy = new BestStrategy();
+----------------------------------> meaning we need a destructor, copy c'tor for Ghost!
+Ghost::step()
+{
+strategy->go();
+move();
+_map->printTile(_location);
+}
+
+class Strategy
+{
+virtual void go = 0;
+}
+
+class BestStrategy
+{
+virtual void go()
+{
+smartGhostMove(); without move because we dot have ghost 
+}
+}
+
+}
+
+*/
 
 void Ghost::smartGhostMove(const Position& pacmanPosition)
 {

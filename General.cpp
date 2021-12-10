@@ -24,3 +24,8 @@ void lower(char& ch)
 		ch = ch + ('a' - 'A');
 	}
 }
+
+int randinRange(int topRange, int botRange)
+{
+	return (rand() % (topRange-botRange)) + botRange;
+}
