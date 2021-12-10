@@ -36,12 +36,13 @@ public:
     void       setTile(Position pos, tileType newtype);
 
     //getters
-    tileType   getTileType(Position pos) const;
-    tileType   getTileType(int _x, int _y) const;
-    Position   getCorner(int index) const;
-    int        getMaxBC() const;
-    int        getWidth() const;
-    int        getHeight() const;
+    tileType            getTileType(Position pos) const;
+    tileType            getTileType(int _x, int _y) const;
+    Position            getCorner(int index) const;
+    int                 getMaxBC() const;
+    int                 getWidth() const;
+    int                 getHeight() const;
+    vector<Position>    getGhostsLoc() const;
 
     int               shortestPathLen(Position dest, Position src) const;
     Position::compass getBestRoute(const Position &dest, const Position &src) const;

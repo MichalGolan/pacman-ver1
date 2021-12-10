@@ -14,19 +14,20 @@ void Game::colourIt()
 	if (_colourfulGame)
 	{
 		_pacman.setColour(YELLOW);
-		_ghosts.at(0).setColour(LIGHTMAGENTA);
-		_ghosts.at(1).setColour(LIGHTCYAN);
+		for (auto& g : _ghosts)
+		{
+			g.setColour(LIGHTCYAN);
+		}
 		_map.setColourfulMap(_colourfulGame);
 	}
 }
 //sets the ghosts of the game
 void Game::initGhosts()
 {	
-	Ghost ghost1(_map.getCorner(1));
-	Ghost ghost2(_map.getCorner(2));
-
-	_ghosts.push_back(ghost1);
-	_ghosts.push_back(ghost2); 
+	for (auto& gLoc : _map.getGhostsLoc())
+	{
+		_ghosts.push_back(Ghost(gLoc));
+	}
 }
 
 //handling user choice and running or exiting
@@ -275,7 +276,7 @@ void Game::printByIndex(int index) const
 	case DATALINE:
 	{
 		gotoxy(0, _map.getHeight() + 1); // data line
-		cout << "score: " << _breadcrumbs << " | " << "Lives: " << _lives;
+		cout << "score: " << getBCscore() + getBonusPoints() << " | " << "Lives: " << _lives;
 		break;
 	}
 	case INVALID:
@@ -304,4 +305,4 @@ void Game::setArrowKeys(const char* keys) { // "waxd s"
 	_arrowKeys[2] = keys[2];
 	_arrowKeys[3] = keys[3];
 	_arrowKeys[4] = keys[4];
-} // mimi
+} 

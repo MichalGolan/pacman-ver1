@@ -13,6 +13,9 @@ public:
 
 	//handle fruit-pacman meet
 	//handle fruit-ghost meet
+
+private:
+	int _appearTime;
 };
 
 

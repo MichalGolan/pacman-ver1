@@ -170,6 +170,11 @@ int Map::getHeight() const
     return _height; 
 }
 
+vector<Position> Map::getGhostsLoc() const
+{
+    return _ghostsLocation;
+}
+
 //sets corners according to the constructed map
 void Map::setCorners()
 {
