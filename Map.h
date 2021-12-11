@@ -23,8 +23,15 @@ public:
 
 public:
     //c'tor and d'tor
-    Map();
+    Map(const string& fname);
     ~Map();
+
+    //files
+    void createFromFile(const string& fileName);
+    void translate(const string& line, tileType* mapLine, int curLine);
+    void translateScreen(const string& fileName);
+    void handleFirstLine(const string& fileLine);
+    void clearDataLine();
 
     //printers
     void print() const;
@@ -38,11 +45,10 @@ public:
     //getters
     tileType            getTileType(Position pos) const;
     tileType            getTileType(int _x, int _y) const;
-    Position            getCorner(int index) const;
     int                 getMaxBC() const;
     int                 getWidth() const;
     int                 getHeight() const;
-    vector<Position>    getGhostsLoc() const;
+    Position            getGhostsLoc(int i) const;
     int                 getTotalBC() const;
     Position            getPacmanLocation() const;
     Position            getDataLine() const;
@@ -52,7 +58,9 @@ public:
     int               shortestPathLen(Position dest, Position src) const;
     Position::compass getBestRoute(const Position &dest, const Position &src) const;
     Position isATunnel(const Position& pos) const;
-
+    int isBorders(int row, int col) {
+        return (row == _height - 1) || (col == _width - 1) || (row == 0) || (col == 0);
+    }
 
 private:
     int                 _width;  //coloumns --->
@@ -64,9 +72,10 @@ private:
     Position            _pacmanLocation, _dataLine, _corners[4];
     vector<Position>    _ghostsLocation;
 
+    const int dataWidth = 20;
+    const int dataHeight = 3;
 
     //private setters
-    void        setCorners();
     void        setVisited() const;
 };
 

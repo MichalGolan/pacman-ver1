@@ -26,9 +26,9 @@ void Creature::setLocation(Position newLocation) {
 	_location = newLocation;
 }
 
-void Creature::setMap(Map& map)
+void Creature::setMap(Map* map)
 {
-	_map = &(map);
+	_map = map;
 }
 
 //calls for move of Position

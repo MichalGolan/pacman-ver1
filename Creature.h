@@ -16,7 +16,7 @@ public:
 	void setDirection(int dir);
 	void setDirection(Position::compass dir);
 	void setLocation(Position newLocation);
-	void setMap(Map& map);
+	void setMap(Map* map);
 
 	//getters
 	Position               getLocation() const;

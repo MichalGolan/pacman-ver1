@@ -4,16 +4,21 @@
 #pragma warning(disable: 4996)
 
 #include <iostream>
+#include <fstream>
+#include <sstream>
+#include <filesystem>
+#include <string>
+#include <vector>
 #include <stdlib.h>
 #include <conio.h>
 #include <windows.h>
-#include <conio.h>
-
-
 #include "Colour.h"
 
 using namespace std;
+namespace fs = filesystem;
 
+int  numOfLinesinFile(ifstream& file);
+int  findInVector(const vector<string>& fileNames, const string& fname);
 void gotoxy(int x, int y);
 void setTextColour(Colour);
 void lower(char& ch);

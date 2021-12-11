@@ -1,5 +1,32 @@
 #include "General.h"
 
+int numOfLinesinFile(ifstream& file)
+{
+	string line;
+	int res = 0;
+	while (getline(file, line))
+	{
+		++res;
+	}
+	file.clear();
+	file.seekg(0);
+	return res;
+}
+
+int findInVector(const vector<string>& fileNames, const string& fname)
+{
+	int found = 0, res = -1;
+
+	for (int i = 0 ; i < fileNames.size() && !found ; ++i )
+	{
+		if (fileNames.at(i) == fname)
+		{
+			res = i;
+		}
+	}
+	return res;
+}
+
 void gotoxy(int x, int y)
 {
 	HANDLE hConsoleOutput;

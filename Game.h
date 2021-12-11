@@ -28,19 +28,25 @@ class Game {
 public:
 	//c'tor
 	Game();
-
+	~Game();
 	//prepares to run the game
 	void set(int& play);
 
 private:
 	//handle colours
-	int  askForColours();
+	int  askForColours() const;
 	void colourIt();
 
+	//files
+	void getFiles(vector<string>& screenFiles);
+	int askForFile(const vector<string>& fileNames) const;
+
 	//runs the entire game
+	void prepareToRun();
 	void run();
 
-	//creatures movement
+	//creatures
+	void	 updateCreaturesByMap();
 	int      validMove(char& key); //Game
 	void     resetCreatures();// --------------------------------------------> seperate to pacman restart and ghost restart 
 //-------------------------------------------------------------------------> and a virtual reset in creature
@@ -66,9 +72,10 @@ private:
 	void setArrowKeys(const char* keys);  // "waxd s"
 
 private: //data members
-	Map				 _map;
+	Map*			 _map;
 	Pacman			 _pacman;
 	vector<Ghost>	 _ghosts;
+	vector<string>   _files;
 	Fruit			 _fruit;
 	int				 _lives;
 	int				 _colourfulGame;
@@ -77,7 +84,3 @@ private: //data members
 };
 
 #endif
-//if(_pacman.pacmnfruitmeet(_fruit_locatin))
-{
-	fruit.setcounter(0);
-}
