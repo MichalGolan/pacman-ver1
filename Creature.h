@@ -4,6 +4,8 @@
 #include "General.h"
 #include "Position.h"
 #include "Map.h"
+#include "NoviceStrategy.h"
+
 
 class Creature {
 public:
@@ -15,7 +17,7 @@ public:
 	void setFigure(const char c);
 	void setDirection(int dir);
 	void setDirection(Position::compass dir);
-	void setLocation(Position newLocation);
+	void setLocation(const Position& newLocation);
 	void setMap(Map* map);
 
 	//getters
@@ -25,10 +27,8 @@ public:
 
 	void			  move();
 	Position::compass randDirection();
-	virtual void	  step() = 0; 
-	virtual void	  reset() = 0;
 
-	int      isNextLocationWallorTunnel(const Position& nextLocation) const;
+	virtual void	  reset() = 0;
 
 protected:
 	Position              _location;

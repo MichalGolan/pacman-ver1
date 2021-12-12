@@ -8,7 +8,7 @@ public:
 	Fruit(Position::compass direction = Position::STAY, char figure = '5');
 
 	void		 randFigure();
-	virtual void step();  // slow movment, random direction, 
+	void step();  // slow movment, random direction, 
 	virtual void reset(); // choose random figure and location on map
 	void activate();
 
@@ -21,7 +21,7 @@ public:
 
 private:
 	int _showTimer, _hideTimer, _active;
-	//NoviceStrategy strategy;
+	NoviceStrategy _strategy;
 };
 
 

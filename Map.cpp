@@ -236,6 +236,11 @@ Position Map::getGhostsLoc(int i) const
     return _ghostsLocation.at(i);
 }
 
+const vector<Position> Map::getGhostlocVec() const
+{
+    return _ghostsLocation;
+}
+
 int Map::getTotalBC() const
 {
     return _totalBC;
@@ -403,4 +408,21 @@ Position Map::isATunnel(const Position& pos) const
         return { 1, pos.y };
     }
     return pos;
+}
+
+// this function checks if next location is a wall or a tunnel, seperating cases by direction (if up or down, if left or down)
+int Map::isNextLocationWallorTunnel(const Position& nextLocation) const
+{
+    if (getTileType(nextLocation) == Map::WALL) // a wall
+    {
+        return 1;
+    }
+    else if (getTileType(nextLocation) == Map::TUNNEL) // tunnel
+    {
+        return 2;
+    }
+    else
+    {
+        return 0;
+    }
 }

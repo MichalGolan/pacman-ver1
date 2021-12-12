@@ -49,11 +49,12 @@ public:
     int                 getWidth() const;
     int                 getHeight() const;
     Position            getGhostsLoc(int i) const;
+    const vector<Position> getGhostlocVec() const;
     int                 getTotalBC() const;
     Position            getPacmanLocation() const;
     Position            getDataLine() const;
 
-
+    int      isNextLocationWallorTunnel(const Position& nextLocation) const;
 
     int               shortestPathLen(Position dest, Position src) const;
     Position::compass getBestRoute(const Position &dest, const Position &src) const;

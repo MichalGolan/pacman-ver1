@@ -21,23 +21,13 @@ void Fruit::step()
 	{
 		reset();
 	}
-	else if(!_active)
+	if(!_active)
 	{
 		_hideTimer--;
 	}
 	else if (_active)
 	{
-		Position nextloc = _location;
-		nextloc.update(_direction);
-
-		if (isNextLocationWallorTunnel(nextloc)) // nextloc is wall or tunnel
-		{
-			//dumb ghost movement --> novice strategy (meaning: fruit will have data member noviceStrategy)
-			//---------------------------------> come back and check this if after doing the novice strategy func
-			//probably will return a good direction and then we use it somehow
-			//strategy.go();
-		}
-		// nextloc good to go!
+		_direction = _strategy.go(_location, _direction);
 		move();
 		_showTimer--;
 	}
@@ -60,7 +50,7 @@ void Fruit::activate()
 	for (int i = 0; i < 10 && !found; i++)
 	{
 		newPos.randPos(_map->getHeight(), _map->getWidth());
-		if (!isNextLocationWallorTunnel(newPos))
+		if (!_map->isNextLocationWallorTunnel(newPos))
 		{
 			found = 1;
 			_showTimer = randinRange(30, 20);

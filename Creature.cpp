@@ -22,7 +22,7 @@ void Creature::setDirection(Position::compass dir) {
 	_direction = dir;
 }
 
-void Creature::setLocation(Position newLocation) {
+void Creature::setLocation(const Position& newLocation) {
 	_location = newLocation;
 }
 
@@ -60,19 +60,3 @@ char Creature::getFigure() const
 	return _figure;
 }
 
-// this function checks if next location is a wall or a tunnel, seperating cases by direction (if up or down, if left or down)
-int Creature::isNextLocationWallorTunnel( const Position& nextLocation) const
-{
-	if (_map->getTileType(nextLocation) == Map::WALL) // a wall
-	{
-		return 1;
-	}
-	else if (_map->getTileType(nextLocation) == Map::TUNNEL) // tunnel
-	{
-		return 2;
-	}
-	else
-	{
-		return 0;
-	}
-}

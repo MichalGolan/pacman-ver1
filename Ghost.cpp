@@ -1,84 +1,56 @@
 #include "Ghost.h"
 
 //responsible for visual and logical ghost movement
-void Ghost::step()
+void Ghost::step(const Position& pacmanLocation)
 {
-	Position Ghostloc = _location;
-	Position NextGhostloc = _location;
-
-	NextGhostloc.update(_direction);
-
-	if (isNextLocationWallorTunnel(NextGhostloc))
+	Position::compass newDir = _direction;
+	
+	if (NoviceStrategy* s = dynamic_cast<NoviceStrategy*>(_strategy))
 	{
-		switchDirection();
+		newDir = s->go(_location, _direction);
+	}
+	else if (GoodStrategy* s = dynamic_cast<GoodStrategy*>(_strategy))
+	{
+		newDir = s->go(_location, pacmanLocation, _direction);
+	}
+	else if (SmartStrategy* s = dynamic_cast<SmartStrategy*>(_strategy))
+	{
+		newDir = s->go(_location, pacmanLocation);
+	}
+	if (newDir != Position::compass::STAY)
+	{
+		setDirection(newDir);
 	}
 	move();
-	_map->printTile(Ghostloc);
+	_map->printTile(_location);
 }
 
 //reset location to ghost initial location
 void Ghost::reset()
 {
 	_map->printTile(_location);
-	setLocation(_map->getCorner(1));
-}
-/*
-Strategy* strategy;
-
-setStrategy(int choice)
-{
-if(1)
-strategy = new NoviceStrategy();
-if(2)
-strategy = new GoodStrategy();
-if(3)
-strategy = new BestStrategy();
-----------------------------------> meaning we need a destructor, copy c'tor for Ghost!
-Ghost::step()
-{
-strategy->go();
-move();
-_map->printTile(_location);
+	setLocation(_startingPos);
 }
 
-class Strategy
+//set strategy by index from user
+void Ghost::setStrategy(int index)
 {
-virtual void go = 0;
-}
-
-class BestStrategy
-{
-virtual void go()
-{
-smartGhostMove(); without move because we dot have ghost 
-}
-}
-
-}
-
-*/
-
-void Ghost::smartGhostMove(const Position& pacmanPosition)
-{
-	Position::compass newDir = _map->getBestRoute(pacmanPosition, _location);
-	setDirection(newDir);
-	
-	move();
-	_map->printTile(_location);
-}
-
-
-//changes ghost's direction so it goes back and forth
-void Ghost::switchDirection()
-{
-	int currdir = _direction;
-	if (currdir % 2 == 0)
+	switch (index)
 	{
-		currdir++;
-	}
-	else
+	case 1:
 	{
-		currdir--;
+		_strategy = new NoviceStrategy;
+		break;
 	}
-	_direction = (Position::compass)currdir;
+	case 2:
+	{
+		_strategy = new GoodStrategy;
+		break;
+	}
+	case 3:
+	{
+		_strategy = new SmartStrategy;
+		break;
+	}
+	}
 }

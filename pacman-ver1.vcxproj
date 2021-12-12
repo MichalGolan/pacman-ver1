@@ -142,25 +142,35 @@
   <ItemGroup>
     <ClCompile Include="Creature.cpp" />
     <ClCompile Include="Fruit.cpp" />
+    <ClCompile Include="GoodStrategy.cpp" />
     <ClCompile Include="Map.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="General.cpp" />
     <ClCompile Include="Ghost.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Menu.cpp" />
+    <ClCompile Include="NoviceStrategy.cpp" />
     <ClCompile Include="Pacman.cpp" />
     <ClCompile Include="Position.cpp" />
+    <ClCompile Include="SmartStrategy.cpp" />
+    <ClCompile Include="Strategy.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Creature.h" />
     <ClInclude Include="Fruit.h" />
+    <ClInclude Include="GoodStrategy.h" />
+    <ClInclude Include="NoviceStrategy.h" />
     <ClInclude Include="Map.h" />
     <ClInclude Include="Colour.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="General.h" />
     <ClInclude Include="Ghost.h" />
+    <ClInclude Include="Menu.h" />
     <ClInclude Include="Pacman.h" />
     <ClInclude Include="Position.h" />
     <ClInclude Include="QItem.h" />
+    <ClInclude Include="SmartStrategy.h" />
+    <ClInclude Include="Strategy.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -2,17 +2,23 @@
 	#define _GHOST_H
 
 #include "Creature.h"
+#include "GoodStrategy.h"
+#include "SmartStrategy.h"
 
 class Ghost : public Creature{
 
 public:
 	//c'tors
-	Ghost(Position location, char figure = '$', Position::compass direction = Position::LEFT) : Creature(figure, direction) {_location = location;}
+	Ghost(const Position& location, char figure = '$', Position::compass direction = Position::LEFT) : _startingPos(location), Creature(figure, direction) {_location = location;}
 
-	virtual void     step();
+	void			 step(const Position& pacmanLocation);
 	virtual void	 reset();
-	void     smartGhostMove(const Position& pacmanPosition);
-	void	 switchDirection();
+
+	void setStrategy(int index);
+
+private:
+	Strategy* _strategy = nullptr;
+	const Position  _startingPos;
 };
 
 

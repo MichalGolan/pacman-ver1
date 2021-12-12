@@ -29,7 +29,7 @@ void Game::colourIt()
 //sets the ghosts of the game
 void Game::initGhosts()
 {	
-	for (auto& gLoc : _map->getGhostsLoc())
+	for (auto& gLoc : _map->getGhostlocVec())
 	{
 		_ghosts.push_back(Ghost(gLoc));
 	}

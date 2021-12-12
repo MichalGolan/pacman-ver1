@@ -6,7 +6,7 @@ void Pacman::step()
 {
 	Position nextpos = _location;
 	nextpos.update(_direction);
-	int wallorTunnel = isNextLocationWallorTunnel(nextpos);
+	int wallorTunnel = _map->isNextLocationWallorTunnel(nextpos);
 
 	if (wallorTunnel == 2)  // tunnel
 	{
@@ -27,7 +27,7 @@ void Pacman::step()
 void Pacman::reset()
 {
 	_map->printTile(_location);
-	setLocation(_map->getCorner(0));
+	setLocation(_map->getPacmanLocation());
 	setDirection(Position::STAY);
 }
 
