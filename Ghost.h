@@ -10,6 +10,7 @@ class Ghost : public Creature{
 public:
 	//c'tors
 	Ghost(const Position& location, char figure = '$', Position::compass direction = Position::LEFT) : _startingPos(location), Creature(figure, direction) {_location = location;}
+	virtual ~Ghost();
 
 	void			 step(const Position& pacmanLocation);
 	virtual void	 reset();

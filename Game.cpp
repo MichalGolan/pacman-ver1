@@ -1,16 +1,41 @@
 ﻿#include"Game.h"
 
 //game's constructor
-Game::Game() : _lives(3), _colourfulGame(0)
+Game::Game() : _lives(3), _colourfulGame(0), _map(nullptr)
 {
 	initGhosts();
-	setArrowKeys("wxads"); // mimi
+	setArrowKeys("wxads"); 
 
 }
 
 Game::~Game()
 {
 	delete _map;
+}
+
+int Game::askForDifficulty()
+{
+	int index;
+	do
+	{
+		cout << "How easy do you want the game to be?" << endl;
+		cout << "1 - child friendly level" << endl << "2 - i'm not as good as I think I am" << endl << "3 - BRING IT ON!" << endl;
+		cin >> index;
+		system("cls");
+		if (!(index >= 1 && index <= 3)) // 1 <= index <= 3
+		{
+			printByIndex(INVALID);
+		}
+	} while (!(index >= 1 && index <= 3));
+	return index;
+}
+void Game::setDifficulty()
+{
+	int difficulty = askForDifficulty();
+	for (auto& g : _ghosts)
+	{
+		g.setStrategy(difficulty);
+	}
 }
 
 //if the player chose a colourful game will handle accordingly
@@ -35,8 +60,21 @@ void Game::initGhosts()
 	}
 }
 
+void Game::setMap(int& index)
+{
+	if (_map)
+	{
+		delete _map;
+	}
+	index = askForFile(_files);
+	_map = new Map(_files.at(index));
+	updateCreaturesByMap();
+	_map->print();
+	printByIndex(DATALINE);
+}
+
 //handling user choice and running or exiting
-void Game::set(int &play)
+void Game::set(int & runGame)
 {
 	char c;
 	printByIndex(MENU);
@@ -49,12 +87,7 @@ void Game::set(int &play)
 	case 1:
 	{
 		prepareToRun();
-		/*system("CLS");
-		_colourfulGame = askForColours();
-		colourIt();
-		system("CLS");
-
-		run(); */
+		run();
 		break;
 	}
 	case 8:
@@ -67,7 +100,7 @@ void Game::set(int &play)
 	case 9:
 	{
 		cout << "Bye" << endl;
-		play = LOSE;
+		runGame = FINISHED;
 		break;
 	}
 	default:
@@ -99,7 +132,6 @@ int Game::askForColours() const
 	return 0;
 }
 
-
 void Game::getFiles(vector<string>& screenFiles)
 {
 	for (const auto& entry : fs::directory_iterator("."))
@@ -108,6 +140,7 @@ void Game::getFiles(vector<string>& screenFiles)
 			screenFiles.push_back(entry.path().string());
 		}
 	}
+	sort(screenFiles.begin(), screenFiles.end());
 }
 
 int Game::askForFile(const vector<string>& fileNames ) const // ---------------> to move to menu class!!!!!
@@ -152,31 +185,27 @@ void Game::prepareToRun()
 	system("CLS");
 	_colourfulGame = askForColours();
 	colourIt();
+	
 	system("CLS");
+	setDifficulty();
 
 	getFiles(_files);
-	int index = askForFile(_files);
-	_map = new Map(_files.at(index)); 
-	updateCreaturesByMap();
-
 	run();
 }
-//RUNS THE GAME!!!
-void Game::run()
-{
-	_map->print();
-	printByIndex(DATALINE);
 
-	int timer = 0, play = GO;
+void Game::runScreen(int& res)
+{
+	int timer = 0, index = 0;
 	char key = 0;
 
+	setMap(index);
 	do {
-		if (_kbhit() ) //only if new input in buffer
+		if (_kbhit()) //only if new input in buffer
 		{
-			key = _getch(); 
+			key = _getch();
 			if (key == ESC)
 			{
-				pause(play);
+				pause(res);
 			}
 			else if (validMove(key))
 			{
@@ -187,8 +216,12 @@ void Game::run()
 		{
 			for (auto g = _ghosts.begin(); g != _ghosts.end(); g++)
 			{
-				g->step();
+				g->step(_pacman.getLocation());
 			}
+		}
+		if (timer % 4 == 0) //to make the ghost move 1/4 speed of pacman
+		{
+			_fruit.step();
 			timer = 0;
 		}
 		timer++;
@@ -197,21 +230,24 @@ void Game::run()
 		printByIndex(DATALINE);
 		meetings();
 		_pacman.move(); // -------------> check later maybe to move this call into _pacman.step()
-		Sleep(300); 
 
-		endGame(play);
+		Sleep(300);
 
-	} while (play == GO); 
-	/// <summary>
-	/// wrap the WHILE loop in a bigger loop while play == go
-	/// change the inner loop to be for specific screen of the game --> we dont want to start over if the player won specific screen,
-	///  but only when lost (no more lives) or won (finished all boardes)
-	/// 
-	/// therfore the current exicting loop need a condition change
-	/// do not forget to delete map
-	/// and load a new map if needed
-	/// </summary>
+		endGame(res);
+
+	} while (res == GO);
+	_files.erase(_files.begin() + index); //remove current map name 
 	system("CLS");
+}
+//RUNS THE GAME!!!
+void Game::run()
+{
+	int play = GO;
+	while ((play == GO || play == WIN ) && _files.size()) // loop run while none of these accured: no more screens, game lost (play changed to 0), player chose to exit
+	{
+		runScreen(play); 
+	}
+	printByIndex(play);
 }
 
 void Game::updateCreaturesByMap()
@@ -317,7 +353,6 @@ void Game::pause(int & play)
 //this function checks for win or loss and handles it
 void Game::endGame(int& play)
 {
-	char c;
 	if (_pacman.getBCscore() == _map->getMaxBC() || _lives == 0) // all breadcrumbs got eaten --> win game
 	{
 		if (_pacman.getBCscore() == _map->getMaxBC())
@@ -328,11 +363,6 @@ void Game::endGame(int& play)
 		{
 			play = LOSE;
 		}
-		printByIndex(play);
-		cout << "Press any key to continue" << endl;
-		fflush(stdin);
-		getch();
-		fflush(stdin);
 	}	
 }
 
@@ -347,6 +377,10 @@ void Game::printByIndex(int index) const
 	{
 		gotoxy(0, _map->getHeight() + 2); //go to message line
 		cout << "GAME OVER. you've lost all your lives." << endl;
+		cout << "Press any key to continue" << endl;
+		fflush(stdin);
+		getch();
+		fflush(stdin);
 		break;
 	}
 	case 1: // user pressed ESC
@@ -359,6 +393,10 @@ void Game::printByIndex(int index) const
 	{
 		gotoxy(0, _map->getHeight() + 2); //go to message line
 		cout << "YOU WIN! YOU DA BEST" << endl; 
+		cout << "Press any key to continue" << endl;
+		fflush(stdin);
+		getch();
+		fflush(stdin);
 		break;
 	}
 	case 8: // info and instructions

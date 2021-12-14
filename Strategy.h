@@ -11,6 +11,10 @@
 
 class Strategy {
 
+public:
+	virtual ~Strategy() {}
+	virtual Position::compass go(const Position& currGPos, const Position& PacmanPos, const Position::compass& dir) = 0;
+
 protected:
 	Strategy() {}
 

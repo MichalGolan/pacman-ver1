@@ -10,6 +10,7 @@
 class Creature {
 public:
 	//c'tor
+	virtual ~Creature() {}
 	Creature(char figure, Position::compass direction);
 
 	//setters

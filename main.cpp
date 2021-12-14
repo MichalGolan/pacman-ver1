@@ -4,13 +4,13 @@
 int main()
 {
 	
-	int play = GO;
+	int runGame = GO;
 	do
 	{
 		Game game;
-		game.set(play);
+		game.set(runGame);
 
-	} while (play);
+	} while (runGame);
 
 
 }

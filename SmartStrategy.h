@@ -6,7 +6,7 @@
 class SmartStrategy : public Strategy
 {
 public:
-	Position::compass go(const Position& currGPos, const Position& PacmanPos);
+	Position::compass go(const Position& currGPos, const Position& PacmanPos, const Position::compass& dir);
 
 
 };

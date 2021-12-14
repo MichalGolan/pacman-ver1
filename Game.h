@@ -17,6 +17,7 @@ const int ENTER = 13;
 
 //printing and gameplay method consts
 const int LOSE = 0;
+const int FINISHED = 0;
 const int GO = 1;
 const int WIN = 2;
 const int MENU = 4;
@@ -30,9 +31,15 @@ public:
 	Game();
 	~Game();
 	//prepares to run the game
-	void set(int& play);
+	void set(int& runGame);
 
 private:
+	void prepareToRun();
+
+	//difficulty
+	void setDifficulty();
+	int askForDifficulty();
+
 	//handle colours
 	int  askForColours() const;
 	void colourIt();
@@ -42,17 +49,16 @@ private:
 	int askForFile(const vector<string>& fileNames) const;
 
 	//runs the entire game
-	void prepareToRun();
+	void runScreen(int&);
 	void run();
 
 	//creatures
 	void	 updateCreaturesByMap();
-	int      validMove(char& key); //Game
-	void     resetCreatures();// --------------------------------------------> seperate to pacman restart and ghost restart 
-//-------------------------------------------------------------------------> and a virtual reset in creature
+	int      validMove(char& key); 
+	void     resetCreatures();
 
 	void	 meetings();
-	void     pacmanGhostMeet(); //Game
+	void     pacmanGhostMeet(); 
 
 
 	//gameplay
@@ -64,6 +70,7 @@ private:
 
 	//setters
 	void initGhosts();
+	void setMap(int&);
 
 	//getters
 	int      getDirectionKey(char key) const;
