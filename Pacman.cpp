@@ -34,7 +34,7 @@ void Pacman::reset()
 //handling the movement for a tunnel
 void Pacman::handleTunnel(const Position& pos)
 {
-	Position newPos = isATunnel(pos);
+	Position newPos = _map->isATunnel(pos);
 	if (newPos == pos)
 	{
 		setDirection(Position::STAY); 
@@ -62,10 +62,10 @@ void Pacman::setBonusPoint(int x)
 	_bonusPoints += x;
 }
 
-int Pacman::handleFruitMeet(const Position& fruitPos, char fruitFigure)
+int Pacman::handleFruitMeet(const Position& fruitPos, char fruitFigure, int isActive)
 {
 	int meet = 0;
-	if(_location == fruitPos)
+	if(isActive && _location == fruitPos)
 	{
 		setBonusPoint(int(fruitFigure - '0'));
 		meet = 1;

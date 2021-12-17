@@ -9,11 +9,10 @@ Ghost::~Ghost()
 //responsible for visual and logical ghost movement
 void Ghost::step(const Position& pacmanLocation)
 {
-	Position::compass newDir = _direction;
-	
-	newDir = _strategy->go(_location, pacmanLocation, _direction);
+	Position prevPos = _location;
+	 _direction = _strategy->go(_location, pacmanLocation, _direction);
 	move();
-	_map->printTile(_location);
+	_map->printTile(prevPos);
 }
 
 //reset location to ghost initial location
@@ -30,17 +29,17 @@ void Ghost::setStrategy(int index)
 	{
 	case 1:
 	{
-		_strategy = new NoviceStrategy;
+		_strategy = new NoviceStrategy(_map);
 		break;
 	}
 	case 2:
 	{
-		_strategy = new GoodStrategy;
+		_strategy = new GoodStrategy(_map);
 		break;
 	}
 	case 3:
 	{
-		_strategy = new SmartStrategy;
+		_strategy = new SmartStrategy(_map);
 		break;
 	}
 	}

@@ -1,6 +1,6 @@
 #include "GoodStrategy.h"
 
-GoodStrategy::GoodStrategy() : _dumbTimer(0)
+GoodStrategy::GoodStrategy(Map* pMap) : Strategy(pMap), _dumbTimer(0)
 {
 	_smartTimer = randinRange(20, 10);
 	_smart = 1;

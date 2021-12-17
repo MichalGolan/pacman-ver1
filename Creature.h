@@ -1,11 +1,8 @@
 #ifndef _CREATURE_H
 	#define _CREATURE_H
 
-#include "General.h"
-#include "Position.h"
 #include "Map.h"
 #include "NoviceStrategy.h"
-
 
 class Creature {
 public:

@@ -6,7 +6,7 @@
 class GoodStrategy : public Strategy
 {
 public:
-	GoodStrategy();
+	GoodStrategy(Map* pMap = nullptr);
 	Position::compass go(const Position& currGPos, const Position& PacmanPos, const Position::compass& dir);
 
 private:

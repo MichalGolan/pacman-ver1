@@ -2,6 +2,7 @@
 	#define _GENERAL_H
 
 #pragma warning(disable: 4996)
+//#define _HAS_STD_BYTE 0
 
 #include <iostream>
 #include <fstream>
@@ -15,7 +16,7 @@
 #include "Colour.h"
 
 using namespace std;
-namespace fs = filesystem;
+namespace fs = std::filesystem;
 
 int  numOfLinesinFile(ifstream& file);
 int  findInVector(const vector<string>& fileNames, const string& fname);

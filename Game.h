@@ -1,15 +1,9 @@
 #ifndef _GAME_H
 	#define _GAME_H
 
-using namespace std;
-
-#include <iostream>
-#include "Map.h"
 #include "Pacman.h"
 #include "Ghost.h"
 #include "Fruit.h"
-#include <vector>
-
 
 //gameplay keys consts
 const int ESC = 27;
@@ -23,6 +17,7 @@ const int WIN = 2;
 const int MENU = 4;
 const int DATALINE = 5;
 const int INVALID = 6;
+const int NOFILES = 7;
 
 class Game {
 
@@ -34,10 +29,9 @@ public:
 	void set(int& runGame);
 
 private:
-	void prepareToRun();
+	void prepareToRun(int& runGame);
 
 	//difficulty
-	void setDifficulty();
 	int askForDifficulty();
 
 	//handle colours
@@ -84,8 +78,7 @@ private: //data members
 	vector<Ghost>	 _ghosts;
 	vector<string>   _files;
 	Fruit			 _fruit;
-	int				 _lives;
-	int				 _colourfulGame;
+	int				 _lives, _colourfulGame, _difficulty;
 	char			 _arrowKeys[5];
 
 };

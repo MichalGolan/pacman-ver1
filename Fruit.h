@@ -5,17 +5,17 @@
 
 class Fruit : public Creature{
 public:
-	Fruit(Position::compass direction = Position::STAY, char figure = '5');
+	Fruit(Position::compass direction = Position::RIGHT, char figure = '5');
 
 	void		 randFigure();
-	void step();  // slow movment, random direction, 
+	void		 step();  // slow movment, random direction, 
 	virtual void reset(); // choose random figure and location on map
-	void activate();
+	void		 activate();
 
-	void setAppearTime(int newTime);
+	void setAppearTime(int newTime); //**************???
+	void setMap(Map* pMap);
 
-	int	 getAppearTime() const;
-
+	int	 getisActive() const; 
 
 	void handleFruitGhostMeet();
 

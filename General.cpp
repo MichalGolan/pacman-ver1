@@ -17,7 +17,7 @@ int findInVector(const vector<string>& fileNames, const string& fname)
 {
 	int found = 0, res = -1;
 
-	for (int i = 0 ; i < fileNames.size() && !found ; ++i )
+	for (unsigned int i = 0 ; i < fileNames.size() && !found ; ++i )
 	{
 		if (fileNames.at(i) == fname)
 		{

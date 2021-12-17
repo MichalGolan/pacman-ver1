@@ -1,11 +1,9 @@
 ﻿#include"Game.h"
 
 //game's constructor
-Game::Game() : _lives(3), _colourfulGame(0), _map(nullptr)
+Game::Game() : _lives(3), _colourfulGame(0), _map(nullptr), _difficulty(1)
 {
-	initGhosts();
 	setArrowKeys("wxads"); 
-
 }
 
 Game::~Game()
@@ -29,14 +27,6 @@ int Game::askForDifficulty()
 	} while (!(index >= 1 && index <= 3));
 	return index;
 }
-void Game::setDifficulty()
-{
-	int difficulty = askForDifficulty();
-	for (auto& g : _ghosts)
-	{
-		g.setStrategy(difficulty);
-	}
-}
 
 //if the player chose a colourful game will handle accordingly
 void Game::colourIt()
@@ -44,6 +34,7 @@ void Game::colourIt()
 	if (_colourfulGame)
 	{
 		_pacman.setColour(YELLOW);
+		_fruit.setColour(RED);
 		for (auto& g : _ghosts)
 		{
 			g.setColour(LIGHTCYAN);
@@ -54,9 +45,15 @@ void Game::colourIt()
 //sets the ghosts of the game
 void Game::initGhosts()
 {	
+	_ghosts.clear();
 	for (auto& gLoc : _map->getGhostlocVec())
 	{
 		_ghosts.push_back(Ghost(gLoc));
+	}
+	for (auto& g : _ghosts)
+	{
+		g.setMap(_map);
+		g.setStrategy(_difficulty);
 	}
 }
 
@@ -69,6 +66,7 @@ void Game::setMap(int& index)
 	index = askForFile(_files);
 	_map = new Map(_files.at(index));
 	updateCreaturesByMap();
+	colourIt();
 	_map->print();
 	printByIndex(DATALINE);
 }
@@ -86,8 +84,11 @@ void Game::set(int & runGame)
 	{
 	case 1:
 	{
-		prepareToRun();
-		run();
+		prepareToRun(runGame);
+		if (runGame)
+		{
+			run();
+		}
 		break;
 	}
 	case 8:
@@ -180,17 +181,20 @@ int Game::askForFile(const vector<string>& fileNames ) const // --------------->
 	return 0; //pressed no --> regular file order
 }
 
-void Game::prepareToRun()
+void Game::prepareToRun(int& runGame)
 {
 	system("CLS");
 	_colourfulGame = askForColours();
-	colourIt();
 	
 	system("CLS");
-	setDifficulty();
+	_difficulty = askForDifficulty();
 
 	getFiles(_files);
-	run();
+	if (!_files.size()) // no screen files in directory
+	{
+		printByIndex(NOFILES);
+		runGame = 0;
+	}
 }
 
 void Game::runScreen(int& res)
@@ -255,15 +259,9 @@ void Game::updateCreaturesByMap()
 	_pacman.setMap(_map);
 	_pacman.setLocation(_map->getPacmanLocation());
 	_fruit.setMap(_map);
-	int i = 0;
-	for (auto& g : _ghosts)
-	{
-		g.setMap(_map);
-		g.setLocation(_map->getGhostsLoc(i));
-		++i;
-	}
+	resetCreatures();
+	initGhosts();
 }
-
 
 //checks if the key is a valid move key
 int Game::validMove(char& key)
@@ -292,7 +290,7 @@ void Game::resetCreatures()
 void Game::meetings()
 {
 	pacmanGhostMeet();
-	if(_pacman.handleFruitMeet(_fruit.getLocation(), _fruit.getFigure()))
+	if(_pacman.handleFruitMeet(_fruit.getLocation(), _fruit.getFigure(), _fruit.getisActive()))
 	{
 		_fruit.reset();
 	}
@@ -431,6 +429,10 @@ void Game::printByIndex(int index) const
 	{
 		cout << "Invalid input, please try again." << endl << endl;
 	}
+	case NOFILES:
+	{
+		cout << "No screen files found in Directory." << endl;
+	}
 	default:
 		break;
 	}
@@ -445,7 +447,7 @@ int Game::getDirectionKey(char key) const
 			return i;
 	}
 	return -1;
-} //mimi
+} 
 
 void Game::setArrowKeys(const char* keys) { // "waxd s"
 	_arrowKeys[0] = keys[0];

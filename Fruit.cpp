@@ -20,6 +20,7 @@ void Fruit::step()
 	else if (_showTimer == 0 && _active)
 	{
 		reset();
+		_map->printTile(_location);
 	}
 	if(!_active)
 	{
@@ -27,9 +28,12 @@ void Fruit::step()
 	}
 	else if (_active)
 	{
-		_direction = _strategy.go(_location, _direction);
+		Position prevPos = _location;
+
+		_direction = _strategy.go(_location, _location, _direction);
 		move();
 		_showTimer--;
+		_map->printTile(prevPos);
 	}
 }
 
@@ -55,6 +59,19 @@ void Fruit::activate()
 			found = 1;
 			_showTimer = randinRange(30, 20);
 			_active = 1;
+			randFigure();
+			_location = newPos;
 		}
 	}
+}
+
+void Fruit::setMap(Map* pMap)
+{
+	Creature::setMap(pMap);
+	_strategy.setMap(pMap);
+}
+
+int	 Fruit::getisActive() const
+{
+	return _active;
 }

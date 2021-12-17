@@ -1,12 +1,13 @@
 #ifndef _MAP_H
 	#define _MAP_H
 
-#include <iostream>
+#include <algorithm>
+#include <array>
+#include <random>
+#include <chrono>
 #include <queue>
 #include "QItem.h"
 #include "Position.h"
-
-using namespace std;
 
 const int maxHeight = 25;
 const int maxWidth = 80;
@@ -58,6 +59,8 @@ public:
 
     int               shortestPathLen(Position dest, Position src) const;
     Position::compass getBestRoute(const Position &dest, const Position &src) const;
+    Position::compass randDirection(const Position& currPos) const;
+
     Position isATunnel(const Position& pos) const;
     int isBorders(int row, int col) {
         return (row == _height - 1) || (col == _width - 1) || (row == 0) || (col == 0);
@@ -69,7 +72,8 @@ private:
                                    //      v
     mutable bool**      _visited;
     tileType**          _map;
-    int                 _totalBC, _colourfullMap;
+    int                 _totalBC;
+    static int          _colourfullMap;
     Position            _pacmanLocation, _dataLine, _corners[4];
     vector<Position>    _ghostsLocation;
 

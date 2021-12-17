@@ -1,5 +1,7 @@
 #include "Map.h"
 
+int Map::_colourfullMap = 0;
+
 Map::Map(const string& fname) 
 {
     createFromFile(fname);
@@ -30,7 +32,7 @@ void Map::translateScreen(const string& fileName)
         _height = numOfLinesinFile(file);
         _map = new tileType * [_height + (dataHeight - 1)]; // for the case in which the dataline is at the end and we need more lines for it
 
-        int i;
+        unsigned int i;
 
         for (i = 0; i < _height; i++)
         {
@@ -53,11 +55,9 @@ void Map::translateScreen(const string& fileName)
             }
         }
     }
-
     file.close();
     clearDataLine();
 }
-
 
 void Map::translate(const string& line, tileType* mapLine, int curLine)
 {
@@ -119,12 +119,16 @@ void Map::clearDataLine()
         _height += (dataHeight - (_height - _dataLine.y));
     }
 
-    for (int i = 0; i < dataHeight; i++)
+    for (unsigned int i = 0; i < dataHeight; i++)
     {
         for (int j = 0; j < dataWidth; j++)
         {
             int row = _dataLine.y + i;
             int col = _dataLine.x + j;
+            if (_map[_dataLine.y + i][_dataLine.x + j] == BREADCRUMB)
+            {
+                _totalBC--;
+            }
             _map[_dataLine.y + i][_dataLine.x + j] = EMPTY; //clearing the space for our dataline in its designated borders
         }
     }
@@ -337,7 +341,7 @@ Position::compass Map::getBestRoute(const Position &dest, const Position &src) c
 
     if (currBestPath == -1)
     {
-        return randRoute(src); // gives some random route in case there is no way to get to the destination at all
+        return randDirection(src); // gives some random route in case there is no way to get to the destination at all
     }
 
     else
@@ -346,13 +350,13 @@ Position::compass Map::getBestRoute(const Position &dest, const Position &src) c
         vector<Position::compass> routes;
         
         int upPath, downPath, leftPath, rightPath, min = currBestPath;
-
-        Position::compass bestDir;
+        Position::compass bestDir = Position::UP;
 
         upPath = shortestPathLen(dest, Position(src.y - 1, src.x));
         downPath = shortestPathLen(dest, Position(src.y + 1, src.x));
         leftPath = shortestPathLen(dest, Position(src.y, src.x - 1));
         rightPath = shortestPathLen(dest, Position(src.y, src.x + 1));
+       
 
         if (upPath != -1)
         {
@@ -388,6 +392,40 @@ Position::compass Map::getBestRoute(const Position &dest, const Position &src) c
     }
 }
 
+
+Position::compass Map::randDirection(const Position& currPos) const
+{
+    array<Position::compass, 4> dirs{ Position::compass::UP, Position::compass::DOWN, Position::compass::LEFT, Position::compass::RIGHT };
+    unsigned scrambler = chrono::system_clock::now().time_since_epoch().count();
+
+    shuffle(dirs.begin(), dirs.end(), default_random_engine(scrambler));
+
+    Position NextGhostloc;
+    int i = 0, found = 0;
+    while (i < 4 && !found)
+    {
+        NextGhostloc = currPos;
+        NextGhostloc.update(dirs[i]);
+        if (isNextLocationWallorTunnel(NextGhostloc))
+        {
+            i++;
+        }
+        else
+        {
+            found = 1;
+        }
+    }
+    if (!found)
+    {
+        return Position::compass::STAY;
+    }
+    else
+    {
+        return dirs[i];
+    }
+}
+
+
 //checks for a tunnel on the other side
 Position Map::isATunnel(const Position& pos) const
 {
@@ -399,13 +437,13 @@ Position Map::isATunnel(const Position& pos) const
     {
         return  { pos.x, 0 };
     }
-    if (pos.x == 1 && getTileType(getWidth() - 2, pos.y) == Map::TUNNEL)
+    if (pos.x == 0 && getTileType(getWidth() - 1, pos.y) == Map::TUNNEL)
     {
-        return { getWidth() - 3, pos.y };
+        return { getWidth() - 1, pos.y };
     }
-    if (pos.x == getWidth() - 3 && getTileType(0, pos.y) == Map::TUNNEL)
+    if (pos.x == getWidth() - 1 && getTileType(0, pos.y) == Map::TUNNEL)
     {
-        return { 1, pos.y };
+        return { 0, pos.y };
     }
     return pos;
 }

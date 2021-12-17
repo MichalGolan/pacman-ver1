@@ -16,7 +16,7 @@ public:
 	int getBonusPoints() const;
 
 	void setBonusPoint(int x);
-	int handleFruitMeet(const Position& fruitPos, char fruitFigure);
+	int handleFruitMeet(const Position& fruitPos, char fruitFigure, int isActive);
 
 private:
 	int    _breadcrumbs, _bonusPoints;

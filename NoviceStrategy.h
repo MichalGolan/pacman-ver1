@@ -6,8 +6,8 @@
 class NoviceStrategy : public Strategy
 {
 public:
+	NoviceStrategy(Map* pMap = nullptr) : Strategy(pMap) {}
 	Position::compass go(const Position& currGPos, const Position& PacmanPos, const Position::compass& dir);
-
 
 };
 
