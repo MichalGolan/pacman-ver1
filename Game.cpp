@@ -13,19 +13,19 @@ Game::~Game()
 
 int Game::askForDifficulty()
 {
-	int index;
+	char index;
 	do
 	{
 		cout << "How easy do you want the game to be?" << endl;
 		cout << "1 - child friendly level" << endl << "2 - i'm not as good as I think I am" << endl << "3 - BRING IT ON!" << endl;
 		cin >> index;
 		system("cls");
-		if (!(index >= 1 && index <= 3)) // 1 <= index <= 3
+		if (!((index - '0') >= 1   &&   (index - '0') <= 3)) // not between 1 <= index <= 3
 		{
 			printByIndex(INVALID);
 		}
-	} while (!(index >= 1 && index <= 3));
-	return index;
+	} while (!((index - '0') >= 1 && (index - '0') <= 3));
+	return (index - '0');
 }
 
 //if the player chose a colourful game will handle accordingly
@@ -159,26 +159,34 @@ int Game::askForFile(const vector<string>& fileNames ) const // --------------->
 		}
 	} while (c != 'y' && c != 'n');
 
-	if (c == 'y')
-	{
+	int index = -1;
+	while (index == -1 && c == 'y')
+	{	
 		string fname;	
-		int index = -1;
-
 		cout << "Please enter file name that ends with .screen:" << endl;
 		cin >> fname;
 		system("cls");
-		while (index == -1)
+		index = findInVector(fileNames, fname);
+		if (index == -1)
 		{
-			cin >> fname;
-			index = findInVector(fileNames, fname);
-			if (index == -1)
+			printByIndex(INVALID);
+			do
 			{
-				printByIndex(INVALID);
-			}
+				cout << "Would you like to choose specific board?" << endl << "Y - Yes / N - No" << endl;
+				cin >> c;
+				lower(c);
+				system("cls");
+				if (c != 'y' && c != 'n')
+				{
+					printByIndex(INVALID);
+				}
+			} while (c != 'y' && c != 'n');
 		}
-		return index;
 	}
-	return 0; //pressed no --> regular file order
+	if (index >= 0)			// found index in vector for file
+		return index;
+	else					// finish loop with 'n' --> regular file order starts with 0
+		return 0;  
 }
 
 void Game::prepareToRun(int& runGame)
@@ -199,6 +207,7 @@ void Game::prepareToRun(int& runGame)
 
 void Game::runScreen(int& res)
 {
+	res = GO;
 	int timer = 0, index = 0;
 	char key = 0;
 
@@ -242,7 +251,9 @@ void Game::runScreen(int& res)
 	} while (res == GO);
 	_files.erase(_files.begin() + index); //remove current map name 
 	system("CLS");
+	setTextColour(WHITE);
 }
+
 //RUNS THE GAME!!!
 void Game::run()
 {
@@ -259,7 +270,8 @@ void Game::updateCreaturesByMap()
 	_pacman.setMap(_map);
 	_pacman.setLocation(_map->getPacmanLocation());
 	_fruit.setMap(_map);
-	resetCreatures();
+	_pacman.reset();
+	_fruit.reset();
 	initGhosts();
 }
 
@@ -274,7 +286,6 @@ int Game::validMove(char& key)
 	return 0;
 }
 
-
 //puts creatures back in their starting locations
 void Game::resetCreatures() 
 {
@@ -283,8 +294,7 @@ void Game::resetCreatures()
 	{
 		g->reset();
 	}
-	_fruit.reset();
-	
+	_fruit.reset();	
 }
 
 void Game::meetings()
@@ -365,7 +375,6 @@ void Game::endGame(int& play)
 }
 
 //printing function for all kinds of printing during the game
-
 void Game::printByIndex(int index) const
 {
 	setTextColour(WHITE);
@@ -428,10 +437,12 @@ void Game::printByIndex(int index) const
 	case INVALID:
 	{
 		cout << "Invalid input, please try again." << endl << endl;
+		break;
 	}
 	case NOFILES:
 	{
 		cout << "No screen files found in Directory." << endl;
+		break;
 	}
 	default:
 		break;

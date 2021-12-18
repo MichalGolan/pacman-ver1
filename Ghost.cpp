@@ -5,7 +5,6 @@ Ghost::~Ghost()
 	delete _strategy;
 }
 
-
 //responsible for visual and logical ghost movement
 void Ghost::step(const Position& pacmanLocation)
 {

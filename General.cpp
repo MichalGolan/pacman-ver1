@@ -19,9 +19,10 @@ int findInVector(const vector<string>& fileNames, const string& fname)
 
 	for (unsigned int i = 0 ; i < fileNames.size() && !found ; ++i )
 	{
-		if (fileNames.at(i) == fname)
+		if (fileNames.at(i).ends_with(fname))
 		{
 			res = i;
+			found = 1;
 		}
 	}
 	return res;

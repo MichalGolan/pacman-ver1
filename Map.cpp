@@ -187,6 +187,8 @@ Map::tileType Map::getTileType(int _x, int _y) const
 //prints the entire board - only happens once during a game
 void Map::print() const
 {
+    system("cls");
+    gotoxy(0, 0);
     for (int i = 0; i < _height; i++)
     {
         for (int j = 0; j < _width; j++)
