@@ -8,10 +8,10 @@ Position::compass Strategy::goSmart(const Position& currGPos, const Position& Pa
 
 Position::compass Strategy::goDumb(const Position& currPos, const Position::compass& dir)
 {
-	Position NextGhostloc = currPos;
-	NextGhostloc.update(dir);
+	Position Nextloc = currPos;
+	Nextloc.update(dir);
 
-	if (_map->isNextLocationWallorTunnel(NextGhostloc))
+	if (_map->isNextLocationWallorTunnel(Nextloc))
 	{
 		return _map->randDirection(currPos);
 	}

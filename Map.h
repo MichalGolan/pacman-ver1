@@ -62,8 +62,12 @@ public:
     Position::compass randDirection(const Position& currPos) const;
 
     Position isATunnel(const Position& pos) const;
-    int isBorders(int row, int col) {
-        return (row == _height - 1) || (col == _width - 1) || (row == 0) || (col == 0);
+    int isBorders(int row, int col) const {
+        return ((row == _height - 1) || (col == _width - 1) || (row == 0) || (col == 0));
+    }
+    int isBorders(Position pos) const
+    {
+        return isBorders(pos.y, pos.x);
     }
 
 private:
@@ -74,7 +78,7 @@ private:
     tileType**          _map;
     int                 _totalBC;
     static int          _colourfullMap;
-    Position            _pacmanLocation, _dataLine, _corners[4];
+    Position            _pacmanLocation, _dataLine;
     vector<Position>    _ghostsLocation;
 
     const int dataWidth = 20;

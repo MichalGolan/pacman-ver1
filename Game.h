@@ -41,6 +41,7 @@ private:
 	//files
 	void getFiles(vector<string>& screenFiles);
 	int askForFile(const vector<string>& fileNames) const;
+	int  findInVector(const string& fname) const;
 
 	//runs the entire game
 	void runScreen(int&);

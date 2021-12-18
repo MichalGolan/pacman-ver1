@@ -260,7 +260,7 @@ void Game::run()
 	int play = GO;
 	while ((play == GO || play == WIN ) && _files.size()) // loop run while none of these accured: no more screens, game lost (play changed to 0), player chose to exit
 	{
-		runScreen(play); 
+		runScreen(play);
 	}
 	printByIndex(play);
 }
@@ -270,9 +270,10 @@ void Game::updateCreaturesByMap()
 	_pacman.setMap(_map);
 	_pacman.setLocation(_map->getPacmanLocation());
 	_fruit.setMap(_map);
-	_pacman.reset();
-	_fruit.reset();
 	initGhosts();
+	_pacman.reset();
+	_pacman.resetScore();
+	_fruit.reset();
 }
 
 //checks if the key is a valid move key
