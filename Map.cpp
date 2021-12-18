@@ -11,7 +11,7 @@ Map::~Map()
 {
     if (_map) //if a map was created, free memory
     {
-        for (int i = 0; i < _height; i++)
+        for (int i = 0; i < _height + (dataHeight - 1); i++)
         {
             delete[] _map[i];
             delete[] _visited[i];
@@ -187,6 +187,8 @@ Map::tileType Map::getTileType(int _x, int _y) const
 //prints the entire board - only happens once during a game
 void Map::print() const
 {
+    system("cls");
+    gotoxy(0, 0);
     for (int i = 0; i < _height; i++)
     {
         for (int j = 0; j < _width; j++)
@@ -429,19 +431,19 @@ Position::compass Map::randDirection(const Position& currPos) const
 //checks for a tunnel on the other side
 Position Map::isATunnel(const Position& pos) const
 {
-    if (pos.y == 0 && getTileType(pos.x, getHeight() - 1) == Map::TUNNEL)
+    if (pos.y == 0 && (getTileType(pos.x, getHeight() - 1) == Map::TUNNEL || getTileType(pos.x, getHeight() - 1) != Map:: WALL))
     {
         return { pos.x, getHeight() - 1 };
     }
-    if (pos.y == getHeight() - 1 && getTileType(pos.x, 0) == Map::TUNNEL)
+    if (pos.y == getHeight() - 1 && (getTileType(pos.x, 0) == Map::TUNNEL || getTileType(pos.x, 0) != Map::WALL))
     {
         return  { pos.x, 0 };
     }
-    if (pos.x == 0 && getTileType(getWidth() - 1, pos.y) == Map::TUNNEL)
+    if (pos.x == 0 && (getTileType(getWidth() - 1, pos.y) == Map::TUNNEL|| getTileType(getWidth() - 1, pos.y) != Map::WALL))
     {
         return { getWidth() - 1, pos.y };
     }
-    if (pos.x == getWidth() - 1 && getTileType(0, pos.y) == Map::TUNNEL)
+    if (pos.x == getWidth() - 1 && (getTileType(0, pos.y) == Map::TUNNEL || getTileType(0, pos.y) != Map::WALL))
     {
         return { 0, pos.y };
     }
@@ -455,10 +457,11 @@ int Map::isNextLocationWallorTunnel(const Position& nextLocation) const
     {
         return 1;
     }
-    else if (getTileType(nextLocation) == Map::TUNNEL) // tunnel
+    else if (isBorders(nextLocation) || getTileType(nextLocation) == Map::TUNNEL)// tunnel / borders
     {
         return 2;
     }
+    
     else
     {
         return 0;

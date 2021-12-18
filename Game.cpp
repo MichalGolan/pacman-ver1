@@ -164,21 +164,42 @@ int Game::askForFile(const vector<string>& fileNames ) const // --------------->
 		string fname;	
 		int index = -1;
 
-		cout << "Please enter file name that ends with .screen:" << endl;
-		cin >> fname;
 		system("cls");
 		while (index == -1)
 		{
+			cout << "Please enter file name that ends with .screen:" << endl;
 			cin >> fname;
-			index = findInVector(fileNames, fname);
-			if (index == -1)
+			if (!fname.ends_with(".screen"))
 			{
 				printByIndex(INVALID);
+			}
+			else
+			{
+				index = findInVector(fname);
+				if (index == -1)
+				{
+					printByIndex(NOFILES);
+				}
 			}
 		}
 		return index;
 	}
 	return 0; //pressed no --> regular file order
+}
+
+int  Game::findInVector(const string& fname) const
+{
+	int found = 0, res = -1;
+
+	for (unsigned int i = 0; i < _files.size() && !found; ++i)
+	{
+		if (_files.at(i).ends_with(fname))
+		{
+			res = i;
+			found = 1;
+		}
+	}
+	return res;
 }
 
 void Game::prepareToRun(int& runGame)
@@ -199,6 +220,7 @@ void Game::prepareToRun(int& runGame)
 
 void Game::runScreen(int& res)
 {
+	res = GO;
 	int timer = 0, index = 0;
 	char key = 0;
 
@@ -242,6 +264,7 @@ void Game::runScreen(int& res)
 	} while (res == GO);
 	_files.erase(_files.begin() + index); //remove current map name 
 	system("CLS");
+	setTextColour(WHITE);
 }
 //RUNS THE GAME!!!
 void Game::run()
@@ -249,7 +272,7 @@ void Game::run()
 	int play = GO;
 	while ((play == GO || play == WIN ) && _files.size()) // loop run while none of these accured: no more screens, game lost (play changed to 0), player chose to exit
 	{
-		runScreen(play); 
+		runScreen(play);
 	}
 	printByIndex(play);
 }
@@ -259,8 +282,10 @@ void Game::updateCreaturesByMap()
 	_pacman.setMap(_map);
 	_pacman.setLocation(_map->getPacmanLocation());
 	_fruit.setMap(_map);
-	resetCreatures();
 	initGhosts();
+	_pacman.reset();
+	_pacman.resetScore();
+	_fruit.reset();
 }
 
 //checks if the key is a valid move key
