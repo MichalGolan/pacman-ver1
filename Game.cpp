@@ -244,7 +244,7 @@ void Game::runScreen(int& res)
 		meetings();
 		_pacman.move(); // -------------> check later maybe to move this call into _pacman.step()
 
-		Sleep(100);
+		Sleep(300);
 
 		endGame(res);
 
