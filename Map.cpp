@@ -134,6 +134,18 @@ void Map::clearDataLine()
     }
 }
 
+void Map::printEmptyDataLine() const
+{
+    int i, j;
+    for (i = 0; i < dataHeight; i++)
+    {
+        gotoxy(getDataLine().x, getDataLine().y + i); // data line
+        for (j = 0; j < dataWidth; j++)
+        {
+            cout << " ";
+        }
+    }
+}
 void Map::handleFirstLine(const string& fileLine)
 {
     _width = fileLine.size();
@@ -310,25 +322,25 @@ int Map::shortestPathLen(Position dest, Position src) const
 
             if (cRow - 1 >= 0 && !_visited[cRow - 1][cCol]) // checking for upwards if not outside borders & not visited 
             {
-                pathsToCheck.push(QItem(cRow - 1, cCol, cDist++));
+                pathsToCheck.push(QItem(cRow - 1, cCol, cDist + 1));
                 _visited[cRow - 1][cCol] = true;
             }
 
             if (cCol - 1 >= 0 && !_visited[cRow][cCol - 1]) // checking for left if not outside borders & not visited 
             {
-                pathsToCheck.push(QItem(cRow, cCol - 1, cDist++));
+                pathsToCheck.push(QItem(cRow, cCol - 1, cDist + 1));
                 _visited[cRow][cCol - 1] = true;
             }
 
             if (cRow + 1 < _height && !_visited[cRow + 1][cCol]) // checking for downwards if not outside borders & not visited 
             {
-                pathsToCheck.push(QItem(cRow + 1, cCol, cDist++));
+                pathsToCheck.push(QItem(cRow + 1, cCol, cDist + 1));
                 _visited[cRow + 1][cCol] = true;
             }
 
             if (cCol + 1 < _width && !_visited[cRow][cCol + 1]) // checking for right if not outside borders & not visited 
             {
-                pathsToCheck.push(QItem(cRow, cCol + 1, cDist++));
+                pathsToCheck.push(QItem(cRow, cCol + 1, cDist + 1));
                 _visited[cRow][cCol + 1] = true;
             }
         }

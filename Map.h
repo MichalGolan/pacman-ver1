@@ -37,6 +37,7 @@ public:
     //printers
     void print() const;
     void printTile(Position pos) const;
+    void printEmptyDataLine() const;
 
     //setters
     void       setColourfulMap(int flag);

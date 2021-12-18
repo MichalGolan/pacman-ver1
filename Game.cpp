@@ -244,7 +244,7 @@ void Game::runScreen(int& res)
 		meetings();
 		_pacman.move(); // -------------> check later maybe to move this call into _pacman.step()
 
-		Sleep(300);
+		Sleep(100);
 
 		endGame(res);
 
@@ -383,7 +383,6 @@ void Game::printByIndex(int index) const
 	{
 	case LOSE: // game over
 	{
-		gotoxy(0, _map->getHeight() + 2); //go to message line
 		cout << "GAME OVER. you've lost all your lives." << endl;
 		cout << "Press any key to continue" << endl;
 		fflush(stdin);
@@ -393,13 +392,16 @@ void Game::printByIndex(int index) const
 	}
 	case 1: // user pressed ESC
 	{
-		gotoxy(0, _map->getHeight() + 2); //go to message line
-		cout << "game paused, press ESC to continue or ENTER to quit game" << endl;
+		gotoxy(_map->getDataLine().x, _map->getDataLine().y); // data line
+		cout << " Game paused -" << endl;
+		gotoxy(_map->getDataLine().x, _map->getDataLine().y + 1);
+		cout << " ESC to continue " << endl;
+		gotoxy(_map->getDataLine().x, _map->getDataLine().y + 2);
+		cout << " ENTER to quit game";
 		break;
 	}
 	case WIN: // game won
 	{
-		gotoxy(0, _map->getHeight() + 2); //go to message line
 		cout << "YOU WIN! YOU DA BEST" << endl; 
 		cout << "Press any key to continue" << endl;
 		fflush(stdin);
@@ -431,8 +433,13 @@ void Game::printByIndex(int index) const
 	}
 	case DATALINE:
 	{
-		gotoxy(0, _map->getHeight() + 1); // data line
-		cout << "score: " << _pacman.getBCscore() + _pacman.getBonusPoints() << " | " << "Lives: " << _lives;
+		_map->printEmptyDataLine();
+		gotoxy(_map->getDataLine().x, _map->getDataLine().y); // data line
+		cout << " Score: " << _pacman.getBCscore() + _pacman.getBonusPoints() << endl;
+		gotoxy(_map->getDataLine().x, _map->getDataLine().y + 1);
+		cout << " Lives: " << _lives;
+		gotoxy(_map->getDataLine().x, _map->getDataLine().y + 2);
+		cout << " press ESC to Pause ";
 		break;
 	}
 	case INVALID:
