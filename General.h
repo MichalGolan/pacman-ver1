@@ -23,5 +23,6 @@ void gotoxy(int x, int y);
 void setTextColour(Colour);
 void lower(char& ch);
 int  randinRange(int topRange, int botRange = 0);
+int findInVector(const vector<string>& fileNames, const string& fname);
 
 #endif

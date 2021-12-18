@@ -461,7 +461,6 @@ int Map::isNextLocationWallorTunnel(const Position& nextLocation) const
     {
         return 2;
     }
-    
     else
     {
         return 0;
