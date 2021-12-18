@@ -56,20 +56,16 @@ public:
     Position            getPacmanLocation() const;
     Position            getDataLine() const;
 
-    int      isNextLocationWallorTunnel(const Position& nextLocation) const;
-
+    //movement methods on the map
+    int               isNextLocationWallorTunnel(const Position& nextLocation) const;
     int               shortestPathLen(Position dest, Position src) const;
     Position::compass getBestRoute(const Position &dest, const Position &src) const;
     Position::compass randDirection(const Position& currPos) const;
 
     Position isATunnel(const Position& pos) const;
-    int isBorders(int row, int col) const {
-        return ((row == _height - 1) || (col == _width - 1) || (row == 0) || (col == 0));
-    }
-    int isBorders(Position pos) const
-    {
-        return isBorders(pos.y, pos.x);
-    }
+    int isBorders(int row, int col) const    { return ((row == _height - 1) || (col == _width - 1) || (row == 0) || (col == 0)); }
+    int isBorders(const Position& pos) const { return isBorders(pos.y, pos.x); }
+
 
 private:
     int                 _width;  //coloumns --->
