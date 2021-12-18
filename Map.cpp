@@ -283,7 +283,7 @@ void Map::setVisited() const // sets the visited array to its default - walls an
 
 int Map::shortestPathLen(Position dest, Position src) const
 {
-    if (src.y >= 0 && src.y < _height && src.x >= 0 && src.x < _width) // only if the src given is inside borders go ahead
+    if (!_visited[src.y][src.x] && src.y >= 0 && src.y < _height && src.x >= 0 && src.x < _width) // only if the src given is inside borders AND NOT A WALL/TUNNEL go ahead
     {
         _visited[src.y][src.x] = true;
 
@@ -307,30 +307,33 @@ int Map::shortestPathLen(Position dest, Position src) const
                 setVisited();
                 return curr.getDistance();
             }
-
-            if (cRow - 1 >= 0 && !_visited[cRow - 1][cCol]) // checking for upwards if not outside borders & not visited 
+            else
             {
-                pathsToCheck.push(QItem(cRow - 1, cCol, cDist++));
-                _visited[cRow - 1][cCol] = true;
-            }
+                if (cRow - 1 >= 0 && !_visited[cRow - 1][cCol]) // checking for upwards if not outside borders & not visited 
+                {
+                    pathsToCheck.push(QItem(cRow - 1, cCol, cDist + 1));
+                    _visited[cRow - 1][cCol] = true;
+                }
 
-            if (cCol - 1 >= 0 && !_visited[cRow][cCol - 1]) // checking for left if not outside borders & not visited 
-            {
-                pathsToCheck.push(QItem(cRow, cCol - 1, cDist++));
-                _visited[cRow][cCol - 1] = true;
-            }
+                if (cCol - 1 >= 0 && !_visited[cRow][cCol - 1]) // checking for left if not outside borders & not visited 
+                {
+                    pathsToCheck.push(QItem(cRow, cCol - 1, cDist + 1));
+                    _visited[cRow][cCol - 1] = true;
+                }
 
-            if (cRow + 1 < _height && !_visited[cRow + 1][cCol]) // checking for downwards if not outside borders & not visited 
-            {
-                pathsToCheck.push(QItem(cRow + 1, cCol, cDist++));
-                _visited[cRow + 1][cCol] = true;
-            }
+                if (cRow + 1 < _height && !_visited[cRow + 1][cCol]) // checking for downwards if not outside borders & not visited 
+                {
+                    pathsToCheck.push(QItem(cRow + 1, cCol, cDist + 1));
+                    _visited[cRow + 1][cCol] = true;
+                }
 
-            if (cCol + 1 < _width && !_visited[cRow][cCol + 1]) // checking for right if not outside borders & not visited 
-            {
-                pathsToCheck.push(QItem(cRow, cCol + 1, cDist++));
-                _visited[cRow][cCol + 1] = true;
+                if (cCol + 1 < _width && !_visited[cRow][cCol + 1]) // checking for right if not outside borders & not visited 
+                {
+                    pathsToCheck.push(QItem(cRow, cCol + 1, cDist + 1));
+                    _visited[cRow][cCol + 1] = true;
+                }
             }
+            
         }
     }
     setVisited();
@@ -354,11 +357,10 @@ Position::compass Map::getBestRoute(const Position &dest, const Position &src) c
         int upPath, downPath, leftPath, rightPath, min = currBestPath;
         Position::compass bestDir = Position::UP;
 
-        upPath = shortestPathLen(dest, Position(src.y - 1, src.x));
-        downPath = shortestPathLen(dest, Position(src.y + 1, src.x));
-        leftPath = shortestPathLen(dest, Position(src.y, src.x - 1));
-        rightPath = shortestPathLen(dest, Position(src.y, src.x + 1));
-       
+        upPath = shortestPathLen(dest, Position(src.x, src.y - 1));
+        downPath = shortestPathLen(dest, Position(src.x, src.y + 1));
+        leftPath = shortestPathLen(dest, Position(src.x - 1, src.y));
+        rightPath = shortestPathLen(dest, Position(src.x + 1, src.y));
 
         if (upPath != -1)
         {
