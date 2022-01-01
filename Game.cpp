@@ -64,7 +64,9 @@ void Game::setMap(int& index)
 		delete _map;
 	}
 	index = askForFile(_files);
-	_map = new Map(_files.at(index));
+
+	_map = new Map(_files.at(index)); //exception here
+
 	updateCreaturesByMap();
 	colourIt();
 	_map->print();
@@ -210,8 +212,15 @@ void Game::runScreen(int& res)
 	res = GO;
 	int timer = 0, index = 0;
 	char key = 0;
-
-	setMap(index);
+	try
+	{
+		setMap(index); //exception here
+	}
+	catch (Exception& e)
+	{
+		_files.erase(_files.begin() + index); //remove current map name 
+		throw e;
+	}
 	do {
 		if (_kbhit()) //only if new input in buffer
 		{
@@ -242,7 +251,7 @@ void Game::runScreen(int& res)
 		_pacman.step();
 		printByIndex(DATALINE);
 		meetings();
-		_pacman.move(); // -------------> check later maybe to move this call into _pacman.step()
+		_pacman.move(); 
 
 		Sleep(300);
 
@@ -260,7 +269,14 @@ void Game::run()
 	int play = GO;
 	while ((play == GO || play == WIN ) && _files.size()) // loop run while none of these accured: no more screens, game lost (play changed to 0), player chose to exit
 	{
-		runScreen(play);
+		try
+		{
+			runScreen(play);
+		}
+		catch (Exception& e)
+		{
+			e.show();
+		}
 	}
 	printByIndex(play);
 }
@@ -367,6 +383,7 @@ void Game::endGame(int& play)
 		if (_pacman.getBCscore() == _map->getMaxBC())
 		{
 			play = WIN;
+
 		}
 		else
 		{

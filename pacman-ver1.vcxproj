@@ -153,11 +153,13 @@
     <ClCompile Include="NoviceStrategy.cpp" />
     <ClCompile Include="Pacman.cpp" />
     <ClCompile Include="Position.cpp" />
+    <ClCompile Include="SaveMode.cpp" />
     <ClCompile Include="SmartStrategy.cpp" />
     <ClCompile Include="Strategy.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Creature.h" />
+    <ClInclude Include="Exception.h" />
     <ClInclude Include="Fruit.h" />
     <ClInclude Include="GoodStrategy.h" />
     <ClInclude Include="NoviceStrategy.h" />
@@ -170,6 +172,7 @@
     <ClInclude Include="Pacman.h" />
     <ClInclude Include="Position.h" />
     <ClInclude Include="QItem.h" />
+    <ClInclude Include="SaveMode.h" />
     <ClInclude Include="SmartStrategy.h" />
     <ClInclude Include="Strategy.h" />
   </ItemGroup>

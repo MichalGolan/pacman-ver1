@@ -1,6 +1,6 @@
 #include "Creature.h"
 
-Creature::Creature(char figure, Position::compass direction) : _location({ 2,1 }), _colour(WHITE), _map(nullptr)
+Creature::Creature(char figure, Position::compass direction) : _location({ -1,-1 }), _colour(WHITE), _map(nullptr) //mimi
 {
 	setDirection(direction);
 	setFigure(figure);

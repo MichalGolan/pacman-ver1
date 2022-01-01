@@ -1,14 +1,15 @@
 #ifndef _MAP_H
 	#define _MAP_H
 
-#include <algorithm>
+
 #include <array>
 #include <random>
 #include <chrono>
 #include <queue>
 #include "QItem.h"
 #include "Position.h"
-
+#include "Exception.h"
+ 
 const int maxHeight = 25;
 const int maxWidth = 80;
 
@@ -26,6 +27,7 @@ public:
     //c'tor and d'tor
     Map(const string& fname);
     ~Map();
+    void freeMap(int limit);
 
     //files
     void createFromFile(const string& fileName);
@@ -33,6 +35,8 @@ public:
     void translateScreen(const string& fileName);
     void handleFirstLine(const string& fileLine);
     void clearDataLine();
+    int  enoughCreatures();
+    void checkValidLegend();
 
     //printers
     void print() const;

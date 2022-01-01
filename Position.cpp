@@ -54,6 +54,12 @@ int Position::operator!=(const Position& other) const
 	return(x != other.x || y != other.y);
 }
 
+ostream& operator<<(ostream& o, const Position& pos)
+{
+	o << pos.x << "," << pos.y;
+	return o;
+}
+
 void Position::gotoPos()
 {
 	gotoxy(x, y);

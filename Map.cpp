@@ -21,6 +21,15 @@ Map::~Map()
     }
 }
 
+void Map::freeMap(int limit)
+{
+    for (int i = 0; i < limit; i++)
+    {
+        delete[] _map[i];
+    }
+    delete[] _map;
+}
+
 void Map::translateScreen(const string& fileName)
 {
     ifstream file(fileName);
@@ -39,13 +48,19 @@ void Map::translateScreen(const string& fileName)
             getline(file, curFileLine);
             if (i == 0)
             {
-                handleFirstLine(curFileLine);
+                handleFirstLine(curFileLine); //exception here
             }
-
             _map[i] = new tileType[_width];
-            translate(curFileLine, _map[i], i);
+            try
+            {
+                translate(curFileLine, _map[i], i);
+            }
+            catch (Exception& e)
+            {
+                freeMap(i);
+                throw e;
+            }
         }
-
         for (i; i < _height + (dataHeight - 1); i++)
         {
             _map[i] = new tileType[_width];
@@ -55,12 +70,25 @@ void Map::translateScreen(const string& fileName)
             }
         }
     }
+    if (!enoughCreatures() || _height > maxHeight)
+    {
+        freeMap(_height + (dataHeight - 1));
+        if (!enoughCreatures())
+        {
+            throw Exception("Not enough creatures in file!");
+        }
+        throw Exception("Screen exceed max height");
+    }
     file.close();
     clearDataLine();
 }
 
 void Map::translate(const string& line, tileType* mapLine, int curLine)
 {
+    if (line.size() > _width && curLine != 0)
+    {
+        throw Exception("Row width exceeds board width");
+    }
     int j = 0;
     for (j = 0; j < _width; j++)
     {
@@ -92,12 +120,19 @@ void Map::translate(const string& line, tileType* mapLine, int curLine)
                     }
                     else if (line[j] == '$')
                     {
-                        _ghostsLocation.push_back(Position(j, curLine));
+                        if (_ghostsLocation.size() <= 4) //mimi
+                        {
+                            _ghostsLocation.push_back(Position(j, curLine));
+                        }
                     }
                 }
             }
             else if (line.at(j) == '&')
             {
+                if (j > (_width - dataWidth) && curLine != 0) //& is in last 20 cols of a row --> not enough cols for dataline //mimi
+                {
+                    throw Exception("Invalid legend location");
+                }
                 _dataLine.setXY(j, curLine);
                 mapLine[j] = EMPTY;
             }
@@ -111,7 +146,6 @@ void Map::translate(const string& line, tileType* mapLine, int curLine)
 
 }
 
-
 void Map::clearDataLine()
 {
     if (_dataLine.y >= _height - (dataHeight - 1))
@@ -123,8 +157,7 @@ void Map::clearDataLine()
     {
         for (int j = 0; j < dataWidth; j++)
         {
-            int row = _dataLine.y + i;
-            int col = _dataLine.x + j;
+            //check if creature in datalin
             if (_map[_dataLine.y + i][_dataLine.x + j] == BREADCRUMB)
             {
                 _totalBC--;
@@ -146,10 +179,15 @@ void Map::printEmptyDataLine() const
         }
     }
 }
+
 void Map::handleFirstLine(const string& fileLine)
 {
+    if (fileLine.size() == 0)
+    {
+        delete[] _map;
+        throw Exception("Invalid first row");
+    }
     _width = fileLine.size();
-
     size_t found = fileLine.find("&");
     if (found != string::npos)
     {
@@ -158,6 +196,12 @@ void Map::handleFirstLine(const string& fileLine)
             _width = found + dataWidth;
         }
     }
+    if (fileLine.size() > maxWidth)
+    {
+        delete[] _map;
+        throw Exception("Screen exceed max width");
+    }
+
 }
 
 void Map::createFromFile(const string& fileName)
@@ -165,15 +209,122 @@ void Map::createFromFile(const string& fileName)
     _totalBC = 0;
     _colourfullMap = 0;
 
-    translateScreen(fileName);
+    translateScreen(fileName); //exception here
+    checkValidLegend(); //exception here
 
     _visited = new bool* [_height + (dataHeight - 1)];
     for (int i = 0; i < _height + (dataHeight - 1); i++)
     {
         _visited[i] = new bool[_width];
     }
-
     setVisited();
+}
+
+void Map::checkValidLegend()
+{
+    int i;
+    //top
+    if (_dataLine.y == 0)
+    {
+        for (i = 0; i < dataWidth; ++i)
+        {
+            if (_map[_height - 1][_dataLine.x + i] != WALL) //go to parllel border and check if
+            {
+                freeMap(_height + (dataHeight - 1));
+                throw Exception("Legend is exposed to creatures");
+            }
+        }
+    }
+    else
+    {
+        for (i = 0; i < dataWidth; ++i)
+        {
+            if (_map[_dataLine.y - 1][_dataLine.x + i] != WALL) //go to parllel border and check if
+            {
+                freeMap(_height + (dataHeight - 1));
+                throw Exception("Legend is exposed to creatures");
+            }
+        }
+    }
+    //bottom
+    if (_dataLine.y + dataHeight == _height)
+    {
+        for (i = 0; i < dataWidth; ++i)
+        {
+            if (_map[0][_dataLine.x + i] != WALL) //go to parllel border and check if
+            {
+                freeMap(_height + (dataHeight - 1));
+                throw Exception("Legend is exposed to creatures");
+            }
+        }
+    }
+    else
+    {
+        for (i = 0; i < dataWidth; ++i)
+        {
+            if (_map[_dataLine.y + dataHeight][_dataLine.x + i] != WALL) //go to parllel border and check if
+            {
+                freeMap(_height + (dataHeight - 1));
+                throw Exception("Legend is exposed to creatures");
+            }
+        }
+    }
+    //right
+    if (_dataLine.x + dataWidth == _width ) // legend right wall is map border
+    {
+        for (i = 0; i < dataHeight; ++i)
+        {
+            if (_map[_dataLine.y + i][0] != WALL) //go to parllel border and check if
+            {
+                freeMap(_height + (dataHeight - 1));
+                throw Exception("Legend is exposed to creatures");
+            }
+        }
+    }
+    else
+    {
+        for (i = 0; i < dataHeight; ++i)
+        {
+            if (_map[_dataLine.y + i][_dataLine.x + dataWidth] != WALL) //go to parllel border and check if
+            {
+                freeMap(_height + (dataHeight - 1));
+                throw Exception("Legend is exposed to creatures");
+            }
+        }
+    }
+    //left
+    if (_dataLine.x == 0)
+    {
+        for (i = 0; i < dataHeight; ++i)
+        {
+            if (_map[_dataLine.y + i][_width - 1] != WALL) //go to parllel border and check if
+            {
+                freeMap(_height + (dataHeight - 1));
+                throw Exception("Legend is exposed to creatures");
+            }
+        }
+    }
+    else
+    {
+        for (i = 0; i < dataHeight; ++i)
+        {
+            if (_map[_dataLine.y + i][_dataLine.x - 1] != WALL) //go to parllel border and check if
+            {
+                freeMap(_height + (dataHeight - 1));
+                throw Exception("Legend is exposed to creatures");
+            }
+        }
+    }
+}
+
+int Map::enoughCreatures()
+{
+    int res = 0;
+    if (_pacmanLocation != (-1, -1) && _dataLine != (-1, -1) )
+    {
+        res = 1;
+    }
+    return res;
 }
 
 void Map::setColourfulMap(int flag)

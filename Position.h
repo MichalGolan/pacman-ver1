@@ -8,7 +8,7 @@ public:
 	enum compass { UP, DOWN, LEFT, RIGHT, STAY };
 	
 public:
-	Position(int _x = 1, int _y = 1) : x(_x), y(_y) {}; 
+	Position(int _x = -1, int _y = -1) : x(_x), y(_y) {}; 
 
 	void setXY(int _x, int _y);
 
@@ -21,6 +21,8 @@ public:
 
 	int  operator==(const Position& other) const;
 	int  operator!=(const Position& other) const;
+
+	friend ostream& operator<<(ostream& o, const Position& pos);
 
 private:
 	int x;

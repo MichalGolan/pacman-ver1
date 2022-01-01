@@ -1,10 +1,9 @@
 #ifndef _MAP_H
 	#define _MENU_H
 
-class Menu {
+#include "Game.h"
+#include "SaveMode.h"
 
-
-
-};
+void start(int mode);
 
 #endif

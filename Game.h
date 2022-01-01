@@ -5,19 +5,6 @@
 #include "Ghost.h"
 #include "Fruit.h"
 
-//gameplay keys consts
-const int ESC = 27;
-const int ENTER = 13;
-
-//printing and gameplay method consts
-const int LOSE = 0;
-const int FINISHED = 0;
-const int GO = 1;
-const int WIN = 2;
-const int MENU = 4;
-const int DATALINE = 5;
-const int INVALID = 6;
-const int NOFILES = 7;
 
 class Game {
 
@@ -28,7 +15,8 @@ public:
 	//prepares to run the game
 	void set(int& runGame);
 
-private:
+
+protected:
 	void prepareToRun(int& runGame);
 
 	//difficulty
@@ -43,7 +31,7 @@ private:
 	int askForFile(const vector<string>& fileNames) const;
 
 	//runs the entire game
-	void runScreen(int&);
+	virtual void runScreen(int&);
 	void run();
 
 	//creatures
@@ -57,7 +45,7 @@ private:
 
 	//gameplay
 	void pause(int& play);
-	void endGame(int& play);
+	virtual void endGame(int& play);
 
 	//printing methods
 	void printByIndex(int index) const;	
@@ -69,10 +57,10 @@ private:
 	//getters
 	int      getDirectionKey(char key) const;
 
-private:
+protected:
 	void setArrowKeys(const char* keys);  // "waxd s"
 
-private: //data members
+protected: //data members
 	Map*			 _map;
 	Pacman			 _pacman;
 	vector<Ghost>	 _ghosts;

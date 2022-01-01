@@ -1,16 +1,17 @@
-#include "Map.h"
-#include "Game.h"
+#include "Menu.h"
 
-int main()
+int main(int argc, char* argv[])
 {
-	
-	int runGame = GO;
-	do
+	if (int mode = checkValidMode(argc, argv))
 	{
-		Game game;
-		game.set(runGame);
-
-	} while (runGame);
-
+		start(mode);
+	}
+	//printer(usage);
 
 }
+
+/*
+addition to readMe:
+* out format to steps file --> numbers represnts directions 
+* 
+*/
