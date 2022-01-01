@@ -3,7 +3,7 @@
 void SaveMode::runScreen(int& res)
 {
 	res = GO;
-	int timer = 0, index = 0;
+	int timer = 0, index = 0, pacmanDied;
 	char key = 0;
 	try
 	{
@@ -18,6 +18,8 @@ void SaveMode::runScreen(int& res)
 	string stepsFile = _currScreen;
 	ofstream steps(stepsFile.append(".steps"), ios_base::app);
 	ofstream result(_currScreen.append(".result"), ios_base::app);
+	steps.flush();
+	result.flush();
 
 	do {
 		if (_kbhit()) //only if new input in buffer
@@ -45,7 +47,7 @@ void SaveMode::runScreen(int& res)
 			_fruit.step();
 			if (_fruit.getisActive())
 			{
-				steps << "f" << "a" << _fruit.getFigure() << _fruit.getDirection() << _fruit.getLocation();
+				steps << "f" << "a" << _fruit.getFigure() << _fruit.getDirection() << _fruit.getLocation() << " ";
 			}
 			else
 			{
@@ -60,7 +62,11 @@ void SaveMode::runScreen(int& res)
 		steps << "p" << _pacman.getDirection() << " ";
 
 		printByIndex(DATALINE);
-		meetings();
+		pacmanDied = meetings();
+		if (pacmanDied)
+		{
+			result << _pointsInTime << " ";
+		}
 		_pacman.move();
 
 		Sleep(300);
@@ -81,13 +87,11 @@ void SaveMode::endGameAndSaveRes(int& play, ofstream& result)
 		if (_pacman.getBCscore() == _map->getMaxBC())
 		{
 			play = WIN;
-			result << endl << _pointsInTime ;
+			result << endl << _pointsInTime;
 		}
 		else
 		{
 			play = LOSE;
-			result << _pointsInTime << " ";
 		}
-
 	}
 }

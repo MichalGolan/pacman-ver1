@@ -39,8 +39,8 @@ protected:
 	int      validMove(char& key); 
 	void     resetCreatures();
 
-	void	 meetings();
-	void     pacmanGhostMeet(); 
+	int	 meetings();
+	int     pacmanGhostMeet(); 
 
 
 	//gameplay

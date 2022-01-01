@@ -314,9 +314,9 @@ void Game::resetCreatures()
 	_fruit.reset();	
 }
 
-void Game::meetings()
+int Game::meetings()
 {
-	pacmanGhostMeet();
+	int pacmanDied = pacmanGhostMeet();
 	if(_pacman.handleFruitMeet(_fruit.getLocation(), _fruit.getFigure(), _fruit.getisActive()))
 	{
 		_fruit.reset();
@@ -328,23 +328,24 @@ void Game::meetings()
 			_fruit.reset();
 		}
 	}
+	return pacmanDied;
 }
 
 //checks if pacman and ghost collided
-void Game::pacmanGhostMeet()
+int Game::pacmanGhostMeet()
 {
-	int flag = 1;
-	for (auto g = _ghosts.begin()  ;  flag && g != _ghosts.end()  ;   g++)
+	int pacmanDied = 0;
+	for (auto g = _ghosts.begin()  ;  !pacmanDied && g != _ghosts.end()  ;   g++)
 	{
 		if (_pacman.getLocation() == g->getLocation())
 		{
 			_lives--;
 			resetCreatures(); // ---- this function eill call for a restart function for each creature
 			printByIndex(DATALINE);
-			flag = 0;
+			pacmanDied = 1;
 		}
 	}
-	
+	return pacmanDied;
 }
 
 //pauses the game
