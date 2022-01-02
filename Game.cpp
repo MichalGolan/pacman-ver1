@@ -310,7 +310,10 @@ void Game::resetCreatures()
 	{
 		g->reset();
 	}
-	_fruit.reset();	
+	if (_fruit.getisActive())
+	{
+		_fruit.reset();
+	}
 }
 
 int Game::meetings()
