@@ -19,11 +19,18 @@ void start(int mode)
 	{
 		Game* game = new SaveMode;
 		game->set(runGame);
+		delete game;
 		break;
 	}
 	case 3: // load
 	{
-		//	_strategy = new SmartStrategy(_map);
+		Game* game = new LoadMode;
+		game->prepareToRun(runGame);
+		if (runGame)
+		{
+			game->run();
+		}
+		delete game;
 		break;
 	}
 	case 4: // silent

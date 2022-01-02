@@ -23,6 +23,28 @@ void Pacman::step()
 	}
 }
 
+void Pacman::loadStep(Position::compass dir)
+{
+	_direction = dir;
+	Position nextpos = _location;
+	nextpos.update(_direction);
+	int wallorTunnel = _map->isNextLocationWallorTunnel(nextpos);
+
+	if (wallorTunnel == 2)  // tunnel
+	{
+		handleTunnel(nextpos);
+	}
+	else if (wallorTunnel == 1) //wall 
+	{
+		_direction = Position::STAY;
+	}
+	else if (_map->getTileType(nextpos) == Map::BREADCRUMB) // not a wall --> check if BC
+	{
+		_map->setTile(nextpos, Map::EMPTY);
+		_breadcrumbs++;
+	}
+}
+
 //reset to initial location
 void Pacman::reset()
 {

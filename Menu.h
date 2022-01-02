@@ -3,6 +3,7 @@
 
 #include "Game.h"
 #include "SaveMode.h"
+#include "LoadMode.h"
 
 void start(int mode);
 

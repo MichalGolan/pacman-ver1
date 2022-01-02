@@ -14,11 +14,10 @@ public:
 	~Game();
 	//prepares to run the game
 	void set(int& runGame);
-
+	virtual void prepareToRun(int& runGame);
+	void run();
 
 protected:
-	void prepareToRun(int& runGame);
-
 	//difficulty
 	int askForDifficulty();
 
@@ -32,7 +31,6 @@ protected:
 
 	//runs the entire game
 	virtual void runScreen(int&);
-	void run();
 
 	//creatures
 	void	 updateCreaturesByMap();

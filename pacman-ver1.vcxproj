@@ -144,6 +144,7 @@
     <ClCompile Include="Creature.cpp" />
     <ClCompile Include="Fruit.cpp" />
     <ClCompile Include="GoodStrategy.cpp" />
+    <ClCompile Include="LoadMode.cpp" />
     <ClCompile Include="Map.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="General.cpp" />
@@ -162,6 +163,7 @@
     <ClInclude Include="Exception.h" />
     <ClInclude Include="Fruit.h" />
     <ClInclude Include="GoodStrategy.h" />
+    <ClInclude Include="LoadMode.h" />
     <ClInclude Include="NoviceStrategy.h" />
     <ClInclude Include="Map.h" />
     <ClInclude Include="Colour.h" />

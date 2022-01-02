@@ -38,28 +38,19 @@ void SaveMode::runScreen(int& res)
 		{
 			for (auto g = _ghosts.begin(); g != _ghosts.end(); g++)
 			{
-				g->step(_pacman.getLocation());
 				steps << "g" << g->getDirection() << " ";
+				g->step(_pacman.getLocation());
 			}
 		}
 		if (timer % 4 == 0) //to make the ghost move 1/4 speed of pacman
 		{
-			_fruit.step();
-			if (_fruit.getisActive())
-			{
-				steps << "f" << "a" << _fruit.getFigure() << _fruit.getDirection() << _fruit.getLocation() << " ";
-			}
-			else
-			{
-				steps << "f" << "n" << " ";
-
-			}
+			_fruit.stepSave(steps);
 			timer = 0;
 		}
 		timer++;
 
-		_pacman.step();
 		steps << "p" << _pacman.getDirection() << " ";
+		_pacman.step();
 
 		printByIndex(DATALINE);
 		pacmanDied = meetings();

@@ -39,7 +39,7 @@ void Position::update(compass direction)
 void Position::move(Colour colour, char c, compass direction)
 {
 	draw(' ');
-	update(direction);
+	update(direction); /*in silent mode inly this call!!!!*/
 	setTextColour(colour);
 	draw(c);
 }

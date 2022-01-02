@@ -9,15 +9,12 @@ public:
 
 	void		 randFigure();
 	void		 step();  // slow movment, random direction, 
+	void		 stepSave(ofstream& steps);
 	virtual void reset(); // choose random figure and location on map
 	void		 activate();
 
-	void setAppearTime(int newTime); //**************???
 	void setMap(Map* pMap);
-
 	int	 getisActive() const; 
-
-	void handleFruitGhostMeet();
 
 private:
 	int _showTimer, _hideTimer, _active;

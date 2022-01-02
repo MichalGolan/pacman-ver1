@@ -23,6 +23,7 @@ public:
 	Position::compass      getDirection() const;
 	char				   getFigure() const;
 
+	void			  stepByDir(Position::compass);
 	void			  move();
 	Position::compass randDirection();
 

@@ -31,6 +31,16 @@ void Creature::setMap(Map* map)
 	_map = map;
 }
 
+
+void Creature::stepByDir(Position::compass dir)
+{
+	Position prevPos = _location;
+	_direction = dir;
+	move();
+	_map->printTile(prevPos);
+
+}
+
 //calls for move of Position
 void Creature::move()
 {

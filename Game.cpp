@@ -248,9 +248,9 @@ void Game::runScreen(int& res)
 		}
 		timer++;
 
+		meetings();
 		_pacman.step();
 		printByIndex(DATALINE);
-		meetings();
 		_pacman.move(); 
 
 		Sleep(300);
@@ -289,7 +289,6 @@ void Game::updateCreaturesByMap()
 	initGhosts();
 	_pacman.reset();
 	_pacman.resetScore();
-	_fruit.reset();
 }
 
 //checks if the key is a valid move key
