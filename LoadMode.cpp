@@ -8,13 +8,20 @@ void LoadMode::runScreen(int& res)
 	try
 	{
 		setMapForLoad(); //exception here
+		_map->print();
+		printByIndex(DATALINE);
 	}
 	catch (Exception& e)
 	{
 		_files.erase(_files.begin()); //remove current map name 
 		throw e;
 	}
+
 	ifstream stepsFile(_stepsFiles.front());
+	if (stepsFile.fail())
+	{
+		throw Exception("No steps file in directory");
+	}
 	string stepsFromFile;
 	getline(stepsFile, stepsFromFile);
 	stepsFile.close();
@@ -82,8 +89,6 @@ void LoadMode::setMapForLoad()
 	_map = new Map(_files.front()); //exception here
 
 	updateCreaturesByMap();
-	_map->print();
-	printByIndex(DATALINE);
 }
 
 Position::compass LoadMode::getStep(stringstream& file) 

@@ -38,13 +38,23 @@ void Creature::stepByDir(Position::compass dir)
 	_direction = dir;
 	move();
 	_map->printTile(prevPos);
+}
 
+void Creature::silentStepByDir(Position::compass dir)
+{
+	_direction = dir;
+	silentMove();
 }
 
 //calls for move of Position
 void Creature::move()
 {
 	_location.move(_colour, _figure, _direction);
+}
+
+void Creature::silentMove()
+{
+	_location.update(_direction);
 }
 
 //return random direction

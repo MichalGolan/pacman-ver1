@@ -12,7 +12,7 @@ public:
 	Position::compass getStep(stringstream& file);
 	Position		  extractPos(const string&);
 
-private:
+protected:
 	vector<string> _stepsFiles;
 };
 

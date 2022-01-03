@@ -24,7 +24,9 @@ public:
 	char				   getFigure() const;
 
 	void			  stepByDir(Position::compass);
+	void			  silentStepByDir(Position::compass dir);
 	void			  move();
+	void			  silentMove();
 	Position::compass randDirection();
 
 	virtual void	  reset() = 0;

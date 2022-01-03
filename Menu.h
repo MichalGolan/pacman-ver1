@@ -4,6 +4,7 @@
 #include "Game.h"
 #include "SaveMode.h"
 #include "LoadMode.h"
+#include "SilentMode.h"
 
 void start(int mode);
 

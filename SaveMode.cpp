@@ -71,6 +71,7 @@ void SaveMode::runScreen(int& res)
 	} while (res == GO);
 	int stringsize = ss.str().size();
 	_files.erase(_files.begin() + index); //remove current map name 
+	_pointsInTime = 0;
 	system("CLS");
 	setTextColour(WHITE);
 

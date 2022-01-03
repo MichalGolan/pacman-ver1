@@ -275,7 +275,9 @@ void Game::run()
 		}
 		catch (Exception& e)
 		{
+			system("cls");
 			e.show();
+			throw Exception("Error");
 		}
 	}
 	printByIndex(play);
@@ -346,7 +348,6 @@ int Game::pacmanGhostMeet()
 		{
 			_lives--;
 			resetCreatures(); // ---- this function eill call for a restart function for each creature
-			printByIndex(DATALINE);
 			pacmanDied = 1;
 		}
 	}

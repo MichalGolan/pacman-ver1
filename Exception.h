@@ -11,7 +11,7 @@ class Exception
 public:
 	Exception(const char* str) : _thrownException(str) {}
 
-	virtual void show() const { cout << "Invalid board: " << _thrownException << endl; }
+	virtual void show() const { cout << "Error: " << _thrownException << endl; }
 
 private:
 	const char* _thrownException;

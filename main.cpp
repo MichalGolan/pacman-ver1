@@ -6,7 +6,10 @@ int main(int argc, char* argv[])
 	{
 		start(mode);
 	}
-	//printer(usage);
+	else
+	{
+		cout << "Usage: [-save] [-load] [-load -silent]" << endl;
+	}
 
 }
 

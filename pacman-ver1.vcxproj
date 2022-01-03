@@ -155,6 +155,7 @@
     <ClCompile Include="Pacman.cpp" />
     <ClCompile Include="Position.cpp" />
     <ClCompile Include="SaveMode.cpp" />
+    <ClCompile Include="SilentMode.cpp" />
     <ClCompile Include="SmartStrategy.cpp" />
     <ClCompile Include="Strategy.cpp" />
   </ItemGroup>
@@ -175,6 +176,7 @@
     <ClInclude Include="Position.h" />
     <ClInclude Include="QItem.h" />
     <ClInclude Include="SaveMode.h" />
+    <ClInclude Include="SilentMode.h" />
     <ClInclude Include="SmartStrategy.h" />
     <ClInclude Include="Strategy.h" />
   </ItemGroup>
