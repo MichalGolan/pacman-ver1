@@ -37,7 +37,7 @@ void Fruit::step()
 	}
 }
 
-void Fruit::stepSave(ofstream& steps)
+void Fruit::stepSave(ofstream& steps, stringstream& ss)
 {
 	int firstAppear = 0;
 	if (_hideTimer == 0 && !_active) // still in hide mode
@@ -55,21 +55,24 @@ void Fruit::stepSave(ofstream& steps)
 	if (!_active)
 	{
 		steps << "f" << "n" << " ";
+		ss << "f" << "n" << " ";
 		_hideTimer--;
 	}
 	else if (_active)
 	{
 		Position prevPos = _location;
+		_direction = _strategy.go(_location, _location, _direction);
 		if (firstAppear)
 		{
 			steps << "f" << "f" << _figure << _direction << _location << " ";
+			ss << "f" << "f" << _figure << _direction << _location << " ";
 			firstAppear = 0;
 		}
 		else
 		{
 			steps << "f" << "a" << _direction  << " ";
+			ss << "f" << "a" << _direction << " ";
 		}
-		_direction = _strategy.go(_location, _location, _direction);
 		move();
 		_showTimer--;
 		_map->printTile(prevPos);

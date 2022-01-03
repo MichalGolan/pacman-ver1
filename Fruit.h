@@ -9,7 +9,7 @@ public:
 
 	void		 randFigure();
 	void		 step();  // slow movment, random direction, 
-	void		 stepSave(ofstream& steps);
+	void		 stepSave(ofstream& steps, stringstream& ss);
 	virtual void reset(); // choose random figure and location on map
 	void		 activate();
 

@@ -9,7 +9,7 @@ public:
 	void		 	  setMapForLoad();
 	virtual void	  runScreen(int&);
 	virtual void      prepareToRun(int& runGame);
-	Position::compass getStep(ifstream& file);
+	Position::compass getStep(stringstream& file);
 	Position		  extractPos(const string&);
 
 private:

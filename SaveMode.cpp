@@ -5,6 +5,8 @@ void SaveMode::runScreen(int& res)
 	res = GO;
 	int timer = 0, index = 0, pacmanDied;
 	char key = 0;
+	string output;
+	stringstream ss(output);
 	try
 	{
 		setMap(index); //exception here
@@ -38,18 +40,20 @@ void SaveMode::runScreen(int& res)
 		{
 			for (auto g = _ghosts.begin(); g != _ghosts.end(); g++)
 			{
-				steps << "g" << g->getDirection() << " ";
 				g->step(_pacman.getLocation());
+				steps << "g" << g->getDirection() << " ";
+				ss << "g" << g->getDirection() << " ";
 			}
 		}
 		if (timer % 4 == 0) //to make the ghost move 1/4 speed of pacman
 		{
-			_fruit.stepSave(steps);
+			_fruit.stepSave(steps, ss);
 			timer = 0;
 		}
 		timer++;
 
 		steps << "p" << _pacman.getDirection() << " ";
+		ss << "p" << _pacman.getDirection() << " ";
 		_pacman.step();
 
 		printByIndex(DATALINE);
@@ -65,6 +69,7 @@ void SaveMode::runScreen(int& res)
 		endGameAndSaveRes(res, result);
 
 	} while (res == GO);
+	int stringsize = ss.str().size();
 	_files.erase(_files.begin() + index); //remove current map name 
 	system("CLS");
 	setTextColour(WHITE);

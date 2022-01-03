@@ -15,20 +15,25 @@ void LoadMode::runScreen(int& res)
 		throw e;
 	}
 	ifstream stepsFile(_stepsFiles.front());
+	string stepsFromFile;
+	getline(stepsFile, stepsFromFile);
+	stepsFile.close();
+	stringstream ss(stepsFromFile);
 	Position::compass newDir;
 ;	do {
 		if (timer % 2 == 0) //to make the ghost move 1/2 speed of pacman
 		{
 			for (auto g = _ghosts.begin(); g != _ghosts.end(); g++)
 			{
-				newDir = getStep(stepsFile);
+				//newDir = getStep(stepsFile);
+				newDir = getStep(ss);
 				g->stepByDir(newDir);
 			}
 		}
 		if (timer % 4 == 0) //to make the ghost move 1/4 speed of pacman
 		{
-			newDir = getStep(stepsFile);
-
+			//newDir = getStep(stepsFile);
+			newDir = getStep(ss);
 			if (newDir != Position::STAY)
 			{
 				_fruit.stepByDir(newDir);
@@ -37,11 +42,12 @@ void LoadMode::runScreen(int& res)
 		}
 		timer++;
 
-		newDir = getStep(stepsFile);
+		//newDir = getStep(stepsFile);
+		newDir = getStep(ss);
 		_pacman.loadStep(newDir);
-		_pacman.move();
 		printByIndex(DATALINE);
 		meetings();
+		_pacman.move();
 
 		Sleep(100);
 		endGame(res);
@@ -80,30 +86,37 @@ void LoadMode::setMapForLoad()
 	printByIndex(DATALINE);
 }
 
-Position::compass LoadMode::getStep(ifstream& file)
+Position::compass LoadMode::getStep(stringstream& file) 
 {
 	string word;
 	file >> word;
-	if (word.front() == 'f')
+	if (word != "")
 	{
-		if (word.at(1) == 'n')
+		if (word.front() == 'f')
 		{
-			return Position::STAY;
-		}
-		else if (word.at(1) == 'f')
-		{
-			_fruit.setFigure(word.at(2));
-			_fruit.setLocation(extractPos(word.substr(4)));
-			return (Position::compass)(word.at(3) - '0');
+			if (word.at(1) == 'n')
+			{
+				return Position::STAY;
+			}
+			else if (word.at(1) == 'f')
+			{
+				_fruit.setFigure(word.at(2));
+				_fruit.setLocation(extractPos(word.substr(4)));
+				return (Position::compass)(word.at(3) - '0');
+			}
+			else
+			{
+				return (Position::compass)(word.at(2) - '0');
+			}
 		}
 		else
 		{
-			return (Position::compass)(word.at(2) - '0');
+			return (Position::compass)(word.at(1) - '0');
 		}
 	}
 	else
 	{
-		return (Position::compass)(word.at(1) - '0');
+		return Position::STAY;
 	}
 }
 

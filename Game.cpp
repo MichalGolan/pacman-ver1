@@ -248,9 +248,9 @@ void Game::runScreen(int& res)
 		}
 		timer++;
 
-		meetings();
 		_pacman.step();
 		printByIndex(DATALINE);
+		meetings();
 		_pacman.move(); 
 
 		Sleep(300);
@@ -319,15 +319,18 @@ void Game::resetCreatures()
 int Game::meetings()
 {
 	int pacmanDied = pacmanGhostMeet();
-	if(_pacman.handleFruitMeet(_fruit.getLocation(), _fruit.getFigure(), _fruit.getisActive()))
+	if(!pacmanDied)
 	{
-		_fruit.reset();
-	}
-	for (auto& g : _ghosts)
-	{
-		if (g.getLocation() == _fruit.getLocation())
+		if (_pacman.handleFruitMeet(_fruit.getLocation(), _fruit.getFigure(), _fruit.getisActive()))
 		{
 			_fruit.reset();
+		}
+		for (auto& g : _ghosts)
+		{
+			if (g.getLocation() == _fruit.getLocation())
+			{
+				_fruit.reset();
+			}
 		}
 	}
 	return pacmanDied;
