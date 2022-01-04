@@ -45,6 +45,10 @@ void LoadMode::runScreen(int& res)
 			{
 				_fruit.stepByDir(newDir);
 			}
+			else if (_fruit.getLocation() != (-1,-1))
+			{
+				_map->printTile(_fruit.getLocation());
+			}
 			timer = 0;
 		}
 		timer++;
@@ -60,6 +64,7 @@ void LoadMode::runScreen(int& res)
 		endGame(res);
 
 	} while (res == GO);
+	_fruit.reset();
 	_files.erase(_files.begin()); //remove current map name 
 	_stepsFiles.erase(_stepsFiles.begin());
 	system("CLS");

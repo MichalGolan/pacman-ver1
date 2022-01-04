@@ -253,12 +253,13 @@ void Game::runScreen(int& res)
 		meetings();
 		_pacman.move(); 
 
-		Sleep(300);
+		Sleep(200);
 
 		endGame(res);
 
 	} while (res == GO);
 	_files.erase(_files.begin() + index); //remove current map name 
+	_fruit.reset();
 	system("CLS");
 	setTextColour(WHITE);
 }

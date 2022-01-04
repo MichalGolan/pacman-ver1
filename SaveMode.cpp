@@ -64,13 +64,14 @@ void SaveMode::runScreen(int& res)
 		}
 		_pacman.move();
 
-		Sleep(300);
+		Sleep(200);
 		_pointsInTime++;
 		endGameAndSaveRes(res, result);
 
 	} while (res == GO);
 	int stringsize = ss.str().size();
 	_files.erase(_files.begin() + index); //remove current map name 
+	_fruit.reset();
 	_pointsInTime = 0;
 	system("CLS");
 	setTextColour(WHITE);
