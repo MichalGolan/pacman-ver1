@@ -1,0 +1,15 @@
+every creature step is printed to the file.
+the directions are represented by numbers in the following way;
+[DIRECTION: UP-0, DOWN-1, LEFT-2, RIGHT-3, STAY-4]
+
+pacman step is represented by p[DIRECTION]
+ghost step is represented by g[DIRECTION]
+
+fruit step is as follows:
+if the fruit is currently not active -> fn
+else if the fruit has just appeared -> ff[FIGURE: 5-9][DIRECTION][POSITION: x,y]
+else (fruit is active and not on its first appearance) -> fa[DIRECTION]
+
+result file format:
+first line contains points of time in which pacman has died in the screen.
+second line contains point of time in which pacman won (passed) the screen.
